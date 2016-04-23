@@ -1,0 +1,23 @@
+<idea-plugin version="2">
+    <id>com.github.shiraji.permissionsdispatcherplugin</id>
+    <name>PermissionsDispatcher plugin</name>
+    <vendor email="isogai.shiraji@gmail.com" url="https://github.com/shiraji">Shiraji</vendor>
+
+    <description><![CDATA[
+    ]]></description>
+
+    <change-notes><![CDATA[
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="143"/>
+
+    <actions>
+        <action id="com.github.shiraji.permissionsdispatcherplugin.GeneratePMCodeAction"
+                class="com.github.shiraji.permissionsdispatcherplugin.GeneratePMCodeAction"
+                text="Generate Runtime Permissions">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
+</idea-plugin>
