@@ -18,6 +18,13 @@ apply plugin: 'kotlin'
 intellij {
     version '15.0.4'
     pluginName 'PermissionsDispatcher plugin'
+    updateSinceUntilBuild = false
+    sameSinceUntilBuild = false
+    publish {
+        username 'shiraji'
+        password System.getenv('PASSWORD')
+        //pluginId '8262'
+    }
 }
 
 group 'com.github.shiraji.permissionsdispatcher'
