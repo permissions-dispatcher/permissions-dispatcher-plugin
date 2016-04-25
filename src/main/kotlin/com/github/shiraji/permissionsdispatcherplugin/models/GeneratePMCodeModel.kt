@@ -5,24 +5,28 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.search.GlobalSearchScope
 
-class GeneratePMCodeModel {
+class GeneratePMCodeModel(project: Project) {
 
-    fun isActivity(aClass: PsiClass, project: Project): Boolean {
-        val activity = createPsiClass("android.app.Activity", project) ?: return false
-        return aClass.isInheritor(activity, true)
+    private val activityPsiClass: PsiClass? = createPsiClass("android.app.Activity", project)
+    private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment", project)
+    private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment", project)
+
+    fun isActivity(aClass: PsiClass): Boolean {
+        activityPsiClass ?: return false
+        return aClass.isInheritor(activityPsiClass, true)
     }
 
-    fun isFragment(aClass: PsiClass, project: Project): Boolean {
-        val fragment = createPsiClass("android.app.Fragment", project) ?: return false
-        return aClass.isInheritor(fragment, true)
+    fun isFragment(aClass: PsiClass): Boolean {
+        fragmentPsiClass ?: return false
+        return aClass.isInheritor(fragmentPsiClass, true)
     }
 
-    fun isSupportFragment(aClass: PsiClass, project: Project): Boolean {
-        val fragment = createPsiClass("android.support.v4.app.Fragment", project) ?: return false
-        return aClass.isInheritor(fragment, true)
+    fun isSupportFragment(aClass: PsiClass): Boolean {
+        supportFragmentPsiClass ?: return false
+        return aClass.isInheritor(supportFragmentPsiClass, true)
     }
 
-    fun createPsiClass(qualifiedName: String, project: Project): PsiClass? {
+    private fun createPsiClass(qualifiedName: String, project: Project): PsiClass? {
         val psiFacade = JavaPsiFacade.getInstance(project);
         val searchScope = GlobalSearchScope.allScope(project);
         return psiFacade.findClass(qualifiedName, searchScope);

@@ -37,13 +37,13 @@ class Handler : CodeInsightActionHandler {
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if(file !is PsiJavaFile) return
 
-        val model = GeneratePMCodeModel()
+        val model = GeneratePMCodeModel(project)
 
-        if (model.isActivity(file.classes[0], project)) {
+        if (model.isActivity(file.classes[0])) {
             System.out.println("Activity!")
         }
 
-        if (model.isSupportFragment(file.classes[0], project)) {
+        if (model.isSupportFragment(file.classes[0])) {
             System.out.println("SupportFragment!")
         }
 
