@@ -18,6 +18,7 @@ apply plugin: 'kotlin'
 intellij {
     version '15.0.4'
     pluginName 'PermissionsDispatcher plugin'
+    alternativeIdePath '/Applications/Android Studio.app'
     updateSinceUntilBuild = false
     sameSinceUntilBuild = false
     publish {
