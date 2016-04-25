@@ -13,8 +13,8 @@
     <idea-version since-build="143"/>
 
     <actions>
-        <action id="com.github.shiraji.permissionsdispatcherplugin.GeneratePMCodeAction"
-                class="com.github.shiraji.permissionsdispatcherplugin.GeneratePMCodeAction"
+        <action id="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
+                class="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
                 text="Generate Runtime Permissions">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
