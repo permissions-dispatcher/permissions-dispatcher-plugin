@@ -5,7 +5,6 @@ import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
@@ -41,14 +40,12 @@ class GeneratePMCodeAction : CodeInsightAction() {
 }
 
 class Handler : CodeInsightActionHandler {
-    override fun startInWriteAction() = false
+    override fun startInWriteAction() = true
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if(file !is PsiJavaFile) return
         val model = GeneratePMCodeModel(project)
-        ApplicationManager.getApplication().runWriteAction {
-            addRuntimePermissionAnnotation(file, model, project)
-        }
+        addRuntimePermissionAnnotation(file, model, project)
     }
 
     private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
