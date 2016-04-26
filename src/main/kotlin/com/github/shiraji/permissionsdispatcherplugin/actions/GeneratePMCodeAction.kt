@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
+import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
     override fun getHandler(): CodeInsightActionHandler {
@@ -29,6 +30,15 @@ class GeneratePMCodeAction : CodeInsightAction() {
         e.presentation.isEnabledAndVisible = model.isActivity(file.classes[0])
                 || model.isSupportFragment(file.classes[0])
                 || model.isFragment(file.classes[0])
+    }
+
+    override fun actionPerformed(e: AnActionEvent?) {
+        val result = JOptionPane.showConfirmDialog(null,
+                "Generate Permissions?", "permissions-dispatcher-plugin", JOptionPane.YES_NO_OPTION);
+
+        if (JOptionPane.YES_OPTION == result) {
+            super.actionPerformed(e)
+        }
     }
 }
 
