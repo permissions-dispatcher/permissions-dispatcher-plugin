@@ -46,19 +46,15 @@ class Handler : CodeInsightActionHandler {
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if(file !is PsiJavaFile) return
         val model = GeneratePMCodeModel(project)
-        addRuntimePermissionAnnotation(file, model, project)
+        ApplicationManager.getApplication().runWriteAction {
+            addRuntimePermissionAnnotation(file, model, project)
+        }
     }
 
     private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
-        val psiAnnotation = file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions")
-        if (psiAnnotation == null) {
-            val psiClass = model.createPsiClass("permissions.dispatcher.RuntimePermissions", project)
-            val application = ApplicationManager.getApplication();
-            application.runWriteAction {
-                file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
-                file.importClass(psiClass)
-            }
-        }
+        if (file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") != null) return
+        file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
+        file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions", project))
     }
 
 }
