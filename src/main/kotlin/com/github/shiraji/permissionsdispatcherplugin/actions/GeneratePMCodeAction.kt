@@ -5,13 +5,11 @@ import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.impl.source.tree.java.PsiAnnotationImpl
 
 class GeneratePMCodeAction : CodeInsightAction() {
     override fun getHandler(): CodeInsightActionHandler {
@@ -43,22 +41,19 @@ class Handler : CodeInsightActionHandler {
         val model = GeneratePMCodeModel(project)
         if (!model.isActivityOrFragment(file.classes[0])) return
 
+        addRuntimePermissionAnnotation(file, model, project)
+    }
 
+    private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
         val psiAnnotation = file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions")
-
-        if(psiAnnotation == null || true) {
-
+        if (psiAnnotation == null) {
             val psiClass = model.createPsiClass("permissions.dispatcher.RuntimePermissions", project)
-
-//            val psiFacade = JavaPsiFacade.getInstance(project);
-
-//            System.out.println(psiFacade.parserFacade.createAnnotationFromText("permissions.dispatcher.RuntimePermissions", psiClass))
-
-
-//            file.classes[0].add()
+            val application = ApplicationManager.getApplication();
+            application.runWriteAction {
+                file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
+                file.importClass(psiClass)
+            }
         }
-
-//        editor.document.replaceString(1,1, "FOOO!!!")
     }
 
 }
