@@ -7,8 +7,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
+import com.intellij.psi.impl.source.tree.java.PsiAnnotationImpl
 
 class GeneratePMCodeAction : CodeInsightAction() {
     override fun getHandler(): CodeInsightActionHandler {
@@ -51,6 +54,19 @@ class Handler : CodeInsightActionHandler {
             System.out.println(it)
         }
 
+        val psiAnnotation = file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions")
+
+        if(psiAnnotation == null || true) {
+
+            val psiClass = model.createPsiClass("permissions.dispatcher.RuntimePermissions", project)
+
+//            val psiFacade = JavaPsiFacade.getInstance(project);
+
+//            System.out.println(psiFacade.parserFacade.createAnnotationFromText("permissions.dispatcher.RuntimePermissions", psiClass))
+
+
+//            file.classes[0].add()
+        }
 
 //        editor.document.replaceString(1,1, "FOOO!!!")
     }
