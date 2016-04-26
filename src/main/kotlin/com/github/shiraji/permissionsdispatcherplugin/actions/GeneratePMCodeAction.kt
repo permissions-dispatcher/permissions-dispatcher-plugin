@@ -27,9 +27,7 @@ class GeneratePMCodeAction : CodeInsightAction() {
         val project = e.getData(CommonDataKeys.PROJECT) ?: return
         val model = GeneratePMCodeModel(project)
 
-        e.presentation.isEnabledAndVisible = model.isActivity(file.classes[0])
-                || model.isSupportFragment(file.classes[0])
-                || model.isFragment(file.classes[0])
+        e.presentation.isEnabledAndVisible = model.isActivityOrFragment(file.classes[0])
     }
 
     override fun actionPerformed(e: AnActionEvent?) {
@@ -47,10 +45,7 @@ class Handler : CodeInsightActionHandler {
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if(file !is PsiJavaFile) return
-
         val model = GeneratePMCodeModel(project)
-        if (!model.isActivityOrFragment(file.classes[0])) return
-
         addRuntimePermissionAnnotation(file, model, project)
     }
 
