@@ -41,18 +41,8 @@ class Handler : CodeInsightActionHandler {
         if(file !is PsiJavaFile) return
 
         val model = GeneratePMCodeModel(project)
+        if (!model.isActivityOrFragment(file.classes[0])) return
 
-        if (model.isActivity(file.classes[0])) {
-            System.out.println("Activity!")
-        }
-
-        if (model.isSupportFragment(file.classes[0])) {
-            System.out.println("SupportFragment!")
-        }
-
-        file.javaClass.annotations.forEach {
-            System.out.println(it)
-        }
 
         val psiAnnotation = file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions")
 

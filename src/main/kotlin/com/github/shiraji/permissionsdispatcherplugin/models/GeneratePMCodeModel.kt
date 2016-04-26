@@ -3,7 +3,6 @@ package com.github.shiraji.permissionsdispatcherplugin.models
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiParserFacade
 import com.intellij.psi.search.GlobalSearchScope
 
 class GeneratePMCodeModel(project: Project) {
@@ -26,6 +25,8 @@ class GeneratePMCodeModel(project: Project) {
         supportFragmentPsiClass ?: return false
         return aClass.isInheritor(supportFragmentPsiClass, true)
     }
+
+    fun isActivityOrFragment(aClass: PsiClass) = isActivity(aClass) || isFragment(aClass) || isSupportFragment(aClass)
 
     fun createPsiClass(qualifiedName: String, project: Project): PsiClass? {
         val psiFacade = JavaPsiFacade.getInstance(project);
