@@ -46,6 +46,10 @@ class Handler : CodeInsightActionHandler {
         if(file !is PsiJavaFile) return
         val model = GeneratePMCodeModel(project)
         addRuntimePermissionAnnotation(file, model, project)
+        addNeedsPermissionMethod(file, model, project)
+    }
+    private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+
     }
 
     private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
