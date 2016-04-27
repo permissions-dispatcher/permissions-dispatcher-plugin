@@ -7,8 +7,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiJavaFile
+import com.intellij.psi.*
+import com.intellij.psi.impl.source.tree.java.PsiCodeBlockImpl
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
@@ -47,7 +47,21 @@ class Handler : CodeInsightActionHandler {
         val model = GeneratePMCodeModel(project)
         addRuntimePermissionAnnotation(file, model, project)
         addNeedsPermissionMethod(file, model, project)
+        addOnRequestPermissionsResult(file, model, project)
     }
+
+    private fun addOnRequestPermissionsResult(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+        file.classes[0].methods.find {
+            it.name == "onRequestPermissionsResult"
+                    && it.returnType == PsiType.VOID
+            // Need parameter checks...maybe in future.
+        }?.let {
+            // add MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        }
+
+        // if no method, then add onRequestPermissionsResult method. maybe I should not use let
+    }
+
     private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
 
     }
