@@ -3,11 +3,16 @@ package com.github.shiraji.permissionsdispatcherplugin.actions
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
+import com.intellij.lang.Language
+import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
+import com.intellij.psi.impl.light.LightMethodBuilder
+import com.intellij.psi.impl.light.LightModifierList
+import com.intellij.psi.impl.light.LightParameterListBuilder
 import com.intellij.psi.impl.source.tree.java.PsiCodeBlockImpl
 import javax.swing.JOptionPane
 
@@ -54,7 +59,10 @@ class Handler : CodeInsightActionHandler {
         val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
 
         if (methods.size == 0) {
-            file.classes[0].methods
+            val manager = PsiManager.getInstance(project)
+            val parameterList = LightParameterListBuilder(manager,JavaLanguage.INSTANCE)
+            val modifierList = LightModifierList(manager, JavaLanguage.INSTANCE)
+            LightMethodBuilder(manager, JavaLanguage.INSTANCE, "onRequestPermissionsResult", parameterList, modifierList)
         }
 
 
