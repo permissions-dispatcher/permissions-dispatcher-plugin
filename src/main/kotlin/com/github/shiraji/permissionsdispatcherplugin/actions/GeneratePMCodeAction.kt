@@ -51,13 +51,12 @@ class Handler : CodeInsightActionHandler {
     }
 
     private fun addOnRequestPermissionsResult(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
-        file.classes[0].methods.find {
-            it.name == "onRequestPermissionsResult"
-                    && it.returnType == PsiType.VOID
-            // Need parameter checks...maybe in future.
-        }?.let {
-            // add MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
+
+        if (methods.size == 0) {
+            file.classes[0].methods
         }
+
 
         // if no method, then add onRequestPermissionsResult method. maybe I should not use let
     }
