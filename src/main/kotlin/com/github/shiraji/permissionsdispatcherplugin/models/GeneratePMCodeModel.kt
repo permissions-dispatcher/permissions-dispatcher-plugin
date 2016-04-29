@@ -11,6 +11,9 @@ class GeneratePMCodeModel(project: Project) {
     private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment", project)
     private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment", project)
 
+    val methodName: String? = "showCamera"
+    val permissions: List<String> = listOf("Manifest.permission.CAMERA")
+
     fun isActivity(aClass: PsiClass): Boolean {
         activityPsiClass ?: return false
         return aClass.isInheritor(activityPsiClass, true)
@@ -32,5 +35,13 @@ class GeneratePMCodeModel(project: Project) {
         val psiFacade = JavaPsiFacade.getInstance(project);
         val searchScope = GlobalSearchScope.allScope(project);
         return psiFacade.findClass(qualifiedName, searchScope);
+    }
+
+    fun toPermissionParameter(): String {
+        if(permissions.size == 1) {
+            return permissions[0]
+        } else {
+            return "Manifest.permission.CAMERA"
+        }
     }
 }
