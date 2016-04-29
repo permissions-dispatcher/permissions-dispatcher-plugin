@@ -11,9 +11,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiType
 import com.intellij.psi.impl.light.LightMethodBuilder
-import com.intellij.psi.impl.light.LightModifierList
-import com.intellij.psi.impl.light.LightParameterListBuilder
+import com.sun.tools.doclets.internal.toolkit.builders.MethodBuilder
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
@@ -59,10 +59,12 @@ class Handler : CodeInsightActionHandler {
         val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
 
         if (methods.size == 0) {
-            val manager = PsiManager.getInstance(project)
-            val parameterList = LightParameterListBuilder(manager, JavaLanguage.INSTANCE)
-            val modifierList = LightModifierList(manager, JavaLanguage.INSTANCE)
-            LightMethodBuilder(manager, JavaLanguage.INSTANCE, "onRequestPermissionsResult", parameterList, modifierList)
+            val methodBuilder = LightMethodBuilder(PsiManager.getInstance(project), JavaLanguage.INSTANCE, "onRequestPermissionsResult")
+            methodBuilder.addModifiers("@Override", "public")
+            methodBuilder.addParameter("requestCode", PsiType.INT)
+            methodBuilder.addParameter("permissions", "String[]")
+            methodBuilder.addParameter("grantResults", "int[]")
+            methodBuilder.setMethodReturnType(PsiType.VOID)
         }
 
 
