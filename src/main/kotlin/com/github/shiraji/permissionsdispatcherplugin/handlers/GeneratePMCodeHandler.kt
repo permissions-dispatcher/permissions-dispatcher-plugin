@@ -17,6 +17,40 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         addRuntimePermissionAnnotation(file, model, project)
         addNeedsPermissionMethod(file, model, project)
         addOnRequestPermissionsResult(file, model, project)
+        addOnShowRationale(file, model, project)
+        addOnPermissionDenied(file, model, project)
+        addOnNeverAskAgain(file, model, project)
+    }
+
+    private fun addOnNeverAskAgain(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+        val methodTemplate = """void ${model.onNeverAskAgainMethodName}() {
+        }""".trimMargin()
+
+        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+        method.modifierList.addAnnotation("OnNeverAskAgain(${model.toPermissionParameter()})")
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnNeverAskAgain", project))
+        file.classes[0].add(method)
+    }
+
+    private fun addOnPermissionDenied(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+        val methodTemplate = """void ${model.onPermissionDeniedMethodName}() {
+        }""".trimMargin()
+
+        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+        method.modifierList.addAnnotation("OnPermissionDenied(${model.toPermissionParameter()})")
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnPermissionDenied", project))
+        file.classes[0].add(method)
+    }
+
+    private fun addOnShowRationale(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+        val methodTemplate = """void ${model.onShowRationaleMethodName}(PermissionRequest request) {
+        }""".trimMargin()
+
+        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+        method.modifierList.addAnnotation("OnShowRationale(${model.toPermissionParameter()})")
+        file.importClass(model.createPsiClass("permissions.dispatcher.PermissionRequest", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnShowRationale", project))
+        file.classes[0].add(method)
     }
 
     private fun addOnRequestPermissionsResult(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
