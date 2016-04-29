@@ -59,12 +59,12 @@ class Handler : CodeInsightActionHandler {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 ${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
             }""".trimMargin()
+
             val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
             method.modifierList.addAnnotation("Override")
             file.classes[0].add(method)
         } else {
-            // check MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults); exist.
-            // if not, add the line
+            // TODO check there is XxxPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults); and if not, add the line
         }
     }
 
