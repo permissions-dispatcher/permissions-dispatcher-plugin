@@ -37,7 +37,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
     }
 
     private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
-        val methodTemplate = """void ${model.methodName}() {
+        val methodTemplate = """void ${model.needsPermissionMethodName}() {
         }""".trimMargin()
 
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
