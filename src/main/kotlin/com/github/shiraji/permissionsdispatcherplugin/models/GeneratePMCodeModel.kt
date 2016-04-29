@@ -11,11 +11,10 @@ class GeneratePMCodeModel(project: Project) {
     private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment", project)
     private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment", project)
 
-    val needsPermissionMethodName: String = "showCamera"
-    val permissions: List<String> = listOf("Manifest.permission.CAMERA")
+    var needsPermissionMethodName: String = "showCamera"
+    var permissions: List<String> = listOf("Manifest.permission.CAMERA")
 
-    val onShowRationaleMethodName: String = "onShowRationaleForShowCamera"
-
+    var onShowRationaleMethodName: String = "onShowRationaleForShowCamera"
 
     fun isActivity(aClass: PsiClass): Boolean {
         activityPsiClass ?: return false
