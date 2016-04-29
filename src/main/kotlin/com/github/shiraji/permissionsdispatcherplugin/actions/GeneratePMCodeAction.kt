@@ -69,7 +69,13 @@ class Handler : CodeInsightActionHandler {
     }
 
     private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+        val methodTemplate = """void ${model.methodName}() {
+        }""".trimMargin()
 
+        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+        method.modifierList.addAnnotation("NeedsPermission(${model.toPermissionParameter()})")
+        file.importClass(model.createPsiClass("permissions.dispatcher.NeedsPermission", project))
+        file.classes[0].add(method)
     }
 
     private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
