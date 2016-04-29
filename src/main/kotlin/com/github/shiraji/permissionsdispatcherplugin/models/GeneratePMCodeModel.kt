@@ -14,6 +14,9 @@ class GeneratePMCodeModel(project: Project) {
     val needsPermissionMethodName: String = "showCamera"
     val permissions: List<String> = listOf("Manifest.permission.CAMERA")
 
+    val onShowRationaleMethodName: String = "onShowRationaleForShowCamera"
+
+
     fun isActivity(aClass: PsiClass): Boolean {
         activityPsiClass ?: return false
         return aClass.isInheritor(activityPsiClass, true)
