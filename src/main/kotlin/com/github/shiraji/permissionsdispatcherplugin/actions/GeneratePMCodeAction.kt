@@ -3,17 +3,13 @@ package com.github.shiraji.permissionsdispatcherplugin.actions
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
-import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiType
-import com.intellij.psi.impl.light.LightMethodBuilder
-import com.sun.tools.doclets.internal.toolkit.builders.MethodBuilder
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
@@ -59,16 +55,17 @@ class Handler : CodeInsightActionHandler {
         val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
 
         if (methods.size == 0) {
-            val methodBuilder = LightMethodBuilder(PsiManager.getInstance(project), JavaLanguage.INSTANCE, "onRequestPermissionsResult")
-            methodBuilder.addModifiers("@Override", "public")
-            methodBuilder.addParameter("requestCode", PsiType.INT)
-            methodBuilder.addParameter("permissions", "String[]")
-            methodBuilder.addParameter("grantResults", "int[]")
-            methodBuilder.setMethodReturnType(PsiType.VOID)
+            val methodTemplate = """public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                ${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+            }""".trimMargin()
+            val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+            method.modifierList.addAnnotation("Override")
+            file.classes[0].add(method)
+        } else {
+            // check MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults); exist.
+            // if not, add the line
         }
-
-
-        // if no method, then add onRequestPermissionsResult method. maybe I should not use let
     }
 
     private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
