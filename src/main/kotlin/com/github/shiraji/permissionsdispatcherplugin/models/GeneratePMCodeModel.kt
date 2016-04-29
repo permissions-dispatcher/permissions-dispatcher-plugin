@@ -15,6 +15,8 @@ class GeneratePMCodeModel(project: Project) {
     var permissions: List<String> = listOf("Manifest.permission.CAMERA")
 
     var onShowRationaleMethodName: String = "onShowRationaleForShowCamera"
+    var onPermissionDeniedMethodName: String = "onPermissionDeniedForShowCamera"
+    var onNeverAskAgainMethodName: String = "onNeverAskAgainForShowCamera"
 
     fun isActivity(aClass: PsiClass): Boolean {
         activityPsiClass ?: return false
