@@ -80,7 +80,9 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
         }
 
         methodNameUI.forEach {
-            it.key.document.addDocumentListener(object : DocumentListener {
+            val jCheckBox = it.value
+            val jTextField = it.key
+            jTextField.document.addDocumentListener(object : DocumentListener {
                 override fun changedUpdate(e: DocumentEvent?) {
                     validateMethodName()
                 }
@@ -94,11 +96,11 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                 }
 
                 private fun validateMethodName() {
-                    if (!it.value.isSelected) {
+                    if (!jCheckBox.isSelected) {
                         return
                     }
 
-                    if (it.key.text.length <= 0) {
+                    if (jTextField.text.length <= 0) {
                         dialog.buttonOK.isEnabled = false
                     } else {
                         dialog.buttonOK.isEnabled = true
