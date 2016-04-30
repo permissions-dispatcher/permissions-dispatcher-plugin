@@ -94,6 +94,10 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                 }
 
                 private fun validateMethodName() {
+                    if (!it.value.isSelected) {
+                        return
+                    }
+
                     if (it.key.text.length <= 0) {
                         dialog.buttonOK.isEnabled = false
                     } else {
