@@ -83,6 +83,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             val jCheckBox = it.value
             val jTextField = it.key
             jTextField.document.addDocumentListener(object : DocumentListener {
+                // TODO This does not help if a user leaves multiple method names blank
                 override fun changedUpdate(e: DocumentEvent?) {
                     validateMethodName()
                 }
