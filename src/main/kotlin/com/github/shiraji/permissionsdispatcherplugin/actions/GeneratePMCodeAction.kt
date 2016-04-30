@@ -28,14 +28,9 @@ class GeneratePMCodeAction : CodeInsightAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent?) {
-
         val dialog = GeneratePMCodeDialog()
         dialog.pack()
         dialog.isVisible = true
-
-        //        val result = JOptionPane.showConfirmDialog(null,
-        //                "Generate Permissions?", "permissions-dispatcher-plugin", JOptionPane.YES_NO_OPTION);
-
         if (dialog.isOk) {
             super.actionPerformed(e)
         }
