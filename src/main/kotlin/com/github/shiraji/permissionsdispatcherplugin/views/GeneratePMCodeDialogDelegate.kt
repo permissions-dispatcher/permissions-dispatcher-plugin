@@ -7,6 +7,8 @@ import javax.swing.JCheckBox
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 import javax.swing.WindowConstants
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
 class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
@@ -20,6 +22,12 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             dialog.readExternalStorage, dialog.writeExternalStorage)
 
     val specialPermissionsCheckbox = listOf<JCheckBox>(dialog.systemAlertWindow, dialog.writeSettings)
+
+    val methodNameUI = mapOf(
+            dialog.needsPermissionTextField to dialog.needsPermissionCheckBox,
+            dialog.onShowRationaleTextField to dialog.onShowRationaleCheckBox,
+            dialog.onPermissionDeniedTextField to dialog.onPermissionDeniedCheckBox,
+            dialog.onNeverAskAgainTextField to dialog.onNeverAskAgainCheckBox)
 
     fun initDialog() {
         dialog.apply {
@@ -40,6 +48,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
             // call onCancel() on ESCAPE
             contentPane.registerKeyboardAction({ onCancel() }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+
         }
 
         dengarPermissionsCheckbox.forEach {
@@ -68,6 +77,30 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                     }
                 }
             }
+        }
+
+        methodNameUI.forEach {
+            it.key.document.addDocumentListener(object : DocumentListener {
+                override fun changedUpdate(e: DocumentEvent?) {
+                    validateMethodName()
+                }
+
+                override fun insertUpdate(e: DocumentEvent?) {
+                    validateMethodName()
+                }
+
+                override fun removeUpdate(e: DocumentEvent?) {
+                    validateMethodName()
+                }
+
+                private fun validateMethodName() {
+                    if (it.key.text.length <= 0) {
+                        dialog.buttonOK.isEnabled = false
+                    } else {
+                        dialog.buttonOK.isEnabled = true
+                    }
+                }
+            })
         }
     }
 
