@@ -107,6 +107,12 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                     }
                 }
             })
+
+            jCheckBox.addChangeListener {
+                val checkBox = it.source as JCheckBox
+                jTextField.isEditable = checkBox.isSelected
+                jTextField.isEnabled = checkBox.isSelected
+            }
         }
     }
 
