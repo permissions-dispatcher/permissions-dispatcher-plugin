@@ -6,7 +6,6 @@ public class GeneratePMCodeDialog extends JDialog {
     JPanel contentPane;
     JButton buttonOK;
     JButton buttonCancel;
-
     JCheckBox readCalendar;
     JCheckBox writeCalendar;
     JCheckBox camera;
@@ -31,9 +30,16 @@ public class GeneratePMCodeDialog extends JDialog {
     JCheckBox receiveMms;
     JCheckBox readExternalStorage;
     JCheckBox writeExternalStorage;
-
     JCheckBox systemAlertWindow;
     JCheckBox writeSettings;
+    JTextField needsPermissionTextField;
+    JCheckBox onShowRationaleCheckBox;
+    JTextField onShowRationaleTextField;
+    JCheckBox onPermissionDeniedCheckBox;
+    JCheckBox onNeverAskAgainCheckBox;
+    JTextField onPermissionDeniedTextField;
+    JTextField onNeverAskAgainTextField;
+    JCheckBox needsPermissionCheckBox;
 
     public boolean isOk = false;
 
