@@ -5,11 +5,11 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.search.GlobalSearchScope
 
-class GeneratePMCodeModel(project: Project) {
+class GeneratePMCodeModel(val project: Project) {
 
-    private val activityPsiClass: PsiClass? = createPsiClass("android.app.Activity", project)
-    private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment", project)
-    private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment", project)
+    private val activityPsiClass: PsiClass? = createPsiClass("android.app.Activity")
+    private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment")
+    private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment")
 
     var needsPermissionMethodName: String = "showCamera"
     var permissions: List<String> = listOf("Manifest.permission.CAMERA")
@@ -35,7 +35,7 @@ class GeneratePMCodeModel(project: Project) {
 
     fun isActivityOrFragment(aClass: PsiClass) = isActivity(aClass) || isFragment(aClass) || isSupportFragment(aClass)
 
-    fun createPsiClass(qualifiedName: String, project: Project): PsiClass? {
+    fun createPsiClass(qualifiedName: String): PsiClass? {
         val psiFacade = JavaPsiFacade.getInstance(project);
         val searchScope = GlobalSearchScope.allScope(project);
         return psiFacade.findClass(qualifiedName, searchScope);

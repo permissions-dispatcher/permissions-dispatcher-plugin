@@ -28,7 +28,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
 
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation("OnNeverAskAgain(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnNeverAskAgain", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnNeverAskAgain"))
         file.classes[0].add(method)
     }
 
@@ -38,7 +38,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
 
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation("OnPermissionDenied(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnPermissionDenied", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnPermissionDenied"))
         file.classes[0].add(method)
     }
 
@@ -48,8 +48,8 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
 
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation("OnShowRationale(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.PermissionRequest", project))
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnShowRationale", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.PermissionRequest"))
+        file.importClass(model.createPsiClass("permissions.dispatcher.OnShowRationale"))
         file.classes[0].add(method)
     }
 
@@ -76,14 +76,14 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
 
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation("NeedsPermission(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.NeedsPermission", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.NeedsPermission"))
         file.classes[0].add(method)
     }
 
     private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
         if (file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") != null) return
         file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
-        file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions", project))
+        file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions"))
     }
 
 }
