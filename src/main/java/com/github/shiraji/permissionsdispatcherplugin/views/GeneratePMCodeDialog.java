@@ -1,83 +1,44 @@
 package com.github.shiraji.permissionsdispatcherplugin.views;
 
 import javax.swing.*;
-import java.awt.event.*;
 
 public class GeneratePMCodeDialog extends JDialog {
     JPanel contentPane;
     JButton buttonOK;
     JButton buttonCancel;
-    private JCheckBox readCalendar;
-    private JCheckBox writeCalendar;
-    private JCheckBox camera;
-    private JCheckBox readContacts;
-    private JCheckBox writeContacts;
-    private JCheckBox getAccounts;
-    private JCheckBox accessFineLocation;
-    private JCheckBox accessCoarseLocation;
-    private JCheckBox recordAudio;
-    private JCheckBox readPhoneState;
-    private JCheckBox callPhone;
-    private JCheckBox readCallLog;
-    private JCheckBox writeCallLog;
-    private JCheckBox addVoicemail;
-    private JCheckBox useSip;
-    private JCheckBox processOutgoingCall;
-    private JCheckBox bodySensors;
-    private JCheckBox sendSms;
-    private JCheckBox receiveSms;
-    private JCheckBox readSms;
-    private JCheckBox receiveWapPush;
-    private JCheckBox receiveMms;
-    private JCheckBox readExternalStorage;
-    private JCheckBox writeExternalStorage;
-    private JCheckBox systemAlertWindow;
-    private JCheckBox writeSettings;
+
+    JCheckBox readCalendar;
+    JCheckBox writeCalendar;
+    JCheckBox camera;
+    JCheckBox readContacts;
+    JCheckBox writeContacts;
+    JCheckBox getAccounts;
+    JCheckBox accessFineLocation;
+    JCheckBox accessCoarseLocation;
+    JCheckBox recordAudio;
+    JCheckBox readPhoneState;
+    JCheckBox callPhone;
+    JCheckBox readCallLog;
+    JCheckBox writeCallLog;
+    JCheckBox addVoicemail;
+    JCheckBox useSip;
+    JCheckBox processOutgoingCall;
+    JCheckBox bodySensors;
+    JCheckBox sendSms;
+    JCheckBox receiveSms;
+    JCheckBox readSms;
+    JCheckBox receiveWapPush;
+    JCheckBox receiveMms;
+    JCheckBox readExternalStorage;
+    JCheckBox writeExternalStorage;
+
+    JCheckBox systemAlertWindow;
+    JCheckBox writeSettings;
 
     public boolean isOk = false;
 
     public GeneratePMCodeDialog() {
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private void onOK() {
-// add your code here
-        isOk = true;
-        setVisible(false);
-    }
-
-    private void onCancel() {
-// add your code here if necessary
-        setVisible(false);
+        new GeneratePMCodeDialogDelegate(this).initDialog();
     }
 
     public static void main(String[] args) {
