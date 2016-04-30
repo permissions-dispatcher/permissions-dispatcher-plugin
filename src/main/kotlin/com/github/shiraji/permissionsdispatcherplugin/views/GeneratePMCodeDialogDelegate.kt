@@ -64,7 +64,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
         specialPermissionsCheckbox.forEach {
             it.addChangeListener {
-                val checkBox: JCheckBox = it.source as JCheckBox
+                val checkBox = it.source as JCheckBox
                 if (checkBox.isSelected) {
                     dengarPermissionsCheckbox.forEach {
                         it.isSelected = false
