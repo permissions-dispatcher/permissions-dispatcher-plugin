@@ -22,9 +22,8 @@ class GeneratePMCodeAction : CodeInsightAction() {
         if (file !is PsiJavaFile) return
 
         val project = e.getData(CommonDataKeys.PROJECT) ?: return
-        val model = GeneratePMCodeModel(project)
 
-        e.presentation.isEnabledAndVisible = model.isActivityOrFragment(file.classes[0])
+        e.presentation.isEnabledAndVisible = GeneratePMCodeModel(project).isActivityOrFragment(file.classes[0])
     }
 
     override fun actionPerformed(e: AnActionEvent?) {
