@@ -80,6 +80,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation("NeedsPermission(${model.toPermissionParameter()})")
         file.importClass(model.createPsiClass("permissions.dispatcher.NeedsPermission"))
+        file.importClass(model.createPsiClass("android.Manifest"))
         file.classes[0].add(method)
     }
 
