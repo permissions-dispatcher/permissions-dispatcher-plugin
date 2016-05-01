@@ -43,9 +43,9 @@ class GeneratePMCodeModel(val project: Project) {
 
     fun toPermissionParameter(): String {
         if (permissions.size == 1) {
-            return permissions[0]
+            return "Manifest.permission.${permissions[0]}"
         } else {
-            return "Manifest.permission.CAMERA"
+            return ""
         }
     }
 }
