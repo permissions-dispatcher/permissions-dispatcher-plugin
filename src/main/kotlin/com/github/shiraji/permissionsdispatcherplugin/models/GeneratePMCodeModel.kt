@@ -42,10 +42,10 @@ class GeneratePMCodeModel(val project: Project) {
     }
 
     fun toPermissionParameter(): String {
-        if (permissions.size == 1) {
-            return "Manifest.permission.${permissions[0]}"
-        } else {
-            return ""
+        return when (permissions.size) {
+            0 -> ""
+            1 -> "Manifest.permission.${permissions[0]}"
+            else -> "{${permissions.map { "Manifest.permission.$it" }.joinToString { it }}}"
         }
     }
 }
