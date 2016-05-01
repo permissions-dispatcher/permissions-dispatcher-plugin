@@ -22,6 +22,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
     }
 
     private fun addOnNeverAskAgain(file: PsiJavaFile, project: Project) {
+        if (model.onNeverAskAgainMethodName.length <= 0) return
         val methodTemplate = """void ${model.onNeverAskAgainMethodName}() {
         }""".trimMargin()
 
@@ -32,6 +33,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
     }
 
     private fun addOnPermissionDenied(file: PsiJavaFile, project: Project) {
+        if (model.onPermissionDeniedMethodName.length <= 0) return
         val methodTemplate = """void ${model.onPermissionDeniedMethodName}() {
         }""".trimMargin()
 
@@ -42,6 +44,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
     }
 
     private fun addOnShowRationale(file: PsiJavaFile, project: Project) {
+        if (model.onShowRationaleMethodName.length <= 0) return
         val methodTemplate = """void ${model.onShowRationaleMethodName}(PermissionRequest request) {
         }""".trimMargin()
 
@@ -70,6 +73,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
     }
 
     private fun addNeedsPermissionMethod(file: PsiJavaFile, project: Project) {
+        if (model.needsPermissionMethodName.length <= 0) return
         val methodTemplate = """void ${model.needsPermissionMethodName}() {
         }""".trimMargin()
 
