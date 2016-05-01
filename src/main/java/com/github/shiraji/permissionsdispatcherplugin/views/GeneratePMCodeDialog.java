@@ -46,7 +46,6 @@ public class GeneratePMCodeDialog extends JDialog {
     public JTextField onNeverAskAgainTextField;
     public JCheckBox onNeverAskAgainCheckBox;
 
-
     public boolean isOk = false;
 
     private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
@@ -54,6 +53,10 @@ public class GeneratePMCodeDialog extends JDialog {
     public GeneratePMCodeDialog() {
         generatePMCodeDialogDelegate = new GeneratePMCodeDialogDelegate(this);
         generatePMCodeDialogDelegate.initDialog();
+    }
+
+    public List<String> getSelectedPermissions() {
+        return generatePMCodeDialogDelegate.getSelectedPermissions();
     }
 
     public static void main(String[] args) {
@@ -64,9 +67,5 @@ public class GeneratePMCodeDialog extends JDialog {
             System.out.println("ok!");
         }
         System.exit(0);
-    }
-
-    public List<String> getSelectedPermissions() {
-        return generatePMCodeDialogDelegate.getSelectedPermissions();
     }
 }
