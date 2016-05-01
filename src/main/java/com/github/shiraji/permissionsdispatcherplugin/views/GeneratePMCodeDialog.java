@@ -1,6 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.views;
 
 import javax.swing.*;
+import java.util.List;
 
 public class GeneratePMCodeDialog extends JDialog {
     JPanel contentPane;
@@ -32,19 +33,27 @@ public class GeneratePMCodeDialog extends JDialog {
     JCheckBox writeExternalStorage;
     JCheckBox systemAlertWindow;
     JCheckBox writeSettings;
-    JTextField needsPermissionTextField;
-    JCheckBox onShowRationaleCheckBox;
-    JTextField onShowRationaleTextField;
-    JCheckBox onPermissionDeniedCheckBox;
-    JCheckBox onNeverAskAgainCheckBox;
-    JTextField onPermissionDeniedTextField;
-    JTextField onNeverAskAgainTextField;
-    JCheckBox needsPermissionCheckBox;
+
+    public JTextField needsPermissionTextField;
+    public JCheckBox needsPermissionCheckBox;
+
+    public JTextField onShowRationaleTextField;
+    public JCheckBox onShowRationaleCheckBox;
+
+    public JTextField onPermissionDeniedTextField;
+    public JCheckBox onPermissionDeniedCheckBox;
+
+    public JTextField onNeverAskAgainTextField;
+    public JCheckBox onNeverAskAgainCheckBox;
+
 
     public boolean isOk = false;
 
+    private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
+
     public GeneratePMCodeDialog() {
-        new GeneratePMCodeDialogDelegate(this).initDialog();
+        generatePMCodeDialogDelegate = new GeneratePMCodeDialogDelegate(this);
+        generatePMCodeDialogDelegate.initDialog();
     }
 
     public static void main(String[] args) {
@@ -55,5 +64,9 @@ public class GeneratePMCodeDialog extends JDialog {
             System.out.println("ok!");
         }
         System.exit(0);
+    }
+
+    public List<String> getSelectedPermissions() {
+        return generatePMCodeDialogDelegate.getSelectedPermissions();
     }
 }

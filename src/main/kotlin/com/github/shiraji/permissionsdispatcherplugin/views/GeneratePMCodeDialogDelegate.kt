@@ -132,4 +132,8 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
     private fun onCancel() {
         dialog.isVisible = false
     }
+
+    fun getSelectedPermissions(): List<String> {
+        return setOf(*dengarPermissionsCheckbox.toTypedArray(), *specialPermissionsCheckbox.toTypedArray()).filter { it.isSelected }.map { it.name }
+    }
 }

@@ -12,7 +12,7 @@ import com.intellij.psi.PsiJavaFile
 class GeneratePMCodeAction : CodeInsightAction() {
     var model: GeneratePMCodeModel? = null
     override fun getHandler(): CodeInsightActionHandler {
-        return GeneratePMCodeHandler()
+        return GeneratePMCodeHandler(model!!)
     }
 
     override fun update(e: AnActionEvent?) {
@@ -34,6 +34,15 @@ class GeneratePMCodeAction : CodeInsightAction() {
         if (dialog.isOk) {
             val project = e?.getData(CommonDataKeys.PROJECT) ?: return
             model = GeneratePMCodeModel(project)
+
+            model?.apply {
+                permissions = dialog.selectedPermissions
+                if (dialog.needsPermissionCheckBox.isSelected) needsPermissionMethodName = dialog.needsPermissionTextField.text
+                if (dialog.onShowRationaleCheckBox.isSelected) onShowRationaleMethodName = dialog.onShowRationaleTextField.text
+                if (dialog.onPermissionDeniedCheckBox.isSelected) onPermissionDeniedMethodName = dialog.onPermissionDeniedTextField.text
+                if (dialog.onNeverAskAgainCheckBox.isSelected) onNeverAskAgainMethodName = dialog.onNeverAskAgainTextField.text
+            }
+
             super.actionPerformed(e)
         }
     }

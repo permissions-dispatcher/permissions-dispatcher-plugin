@@ -8,21 +8,20 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
 
-class GeneratePMCodeHandler : CodeInsightActionHandler {
+class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionHandler {
     override fun startInWriteAction() = true
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if (file !is PsiJavaFile) return
-        val model = GeneratePMCodeModel(project)
-        addRuntimePermissionAnnotation(file, model, project)
-        addNeedsPermissionMethod(file, model, project)
-        addOnRequestPermissionsResult(file, model, project)
-        addOnShowRationale(file, model, project)
-        addOnPermissionDenied(file, model, project)
-        addOnNeverAskAgain(file, model, project)
+        addRuntimePermissionAnnotation(file, project)
+        addNeedsPermissionMethod(file, project)
+        addOnRequestPermissionsResult(file, project)
+        addOnShowRationale(file, project)
+        addOnPermissionDenied(file, project)
+        addOnNeverAskAgain(file, project)
     }
 
-    private fun addOnNeverAskAgain(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addOnNeverAskAgain(file: PsiJavaFile, project: Project) {
         val methodTemplate = """void ${model.onNeverAskAgainMethodName}() {
         }""".trimMargin()
 
@@ -32,7 +31,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         file.classes[0].add(method)
     }
 
-    private fun addOnPermissionDenied(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addOnPermissionDenied(file: PsiJavaFile, project: Project) {
         val methodTemplate = """void ${model.onPermissionDeniedMethodName}() {
         }""".trimMargin()
 
@@ -42,7 +41,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         file.classes[0].add(method)
     }
 
-    private fun addOnShowRationale(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addOnShowRationale(file: PsiJavaFile, project: Project) {
         val methodTemplate = """void ${model.onShowRationaleMethodName}(PermissionRequest request) {
         }""".trimMargin()
 
@@ -53,7 +52,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         file.classes[0].add(method)
     }
 
-    private fun addOnRequestPermissionsResult(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addOnRequestPermissionsResult(file: PsiJavaFile, project: Project) {
         val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
 
         if (methods.size == 0) {
@@ -70,7 +69,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         }
     }
 
-    private fun addNeedsPermissionMethod(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addNeedsPermissionMethod(file: PsiJavaFile, project: Project) {
         val methodTemplate = """void ${model.needsPermissionMethodName}() {
         }""".trimMargin()
 
@@ -80,7 +79,7 @@ class GeneratePMCodeHandler : CodeInsightActionHandler {
         file.classes[0].add(method)
     }
 
-    private fun addRuntimePermissionAnnotation(file: PsiJavaFile, model: GeneratePMCodeModel, project: Project) {
+    private fun addRuntimePermissionAnnotation(file: PsiJavaFile, project: Project) {
         if (file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") != null) return
         file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
         file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions"))
