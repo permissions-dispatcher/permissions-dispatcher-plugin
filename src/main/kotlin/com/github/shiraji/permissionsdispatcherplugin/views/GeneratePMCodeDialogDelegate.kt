@@ -3,10 +3,7 @@ package com.github.shiraji.permissionsdispatcherplugin.views
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.KeyStroke
-import javax.swing.WindowConstants
+import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
@@ -115,6 +112,14 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                 jTextField.isEnabled = checkBox.isSelected
             }
         }
+    }
+
+    private fun isValid(): Boolean {
+        if (dengarPermissionsCheckbox.none { it.isSelected } && specialPermissionsCheckbox.none { it.isSelected } ) {
+            JOptionPane.showMessageDialog(null, "");
+            return false
+        }
+        return methodNameUI.all { !it.value.isSelected || it.key.text.length > 0 }
     }
 
     private fun onCancel() {
