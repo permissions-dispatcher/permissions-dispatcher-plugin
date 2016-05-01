@@ -33,8 +33,10 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
             getRootPane().defaultButton = buttonOK
             buttonOK.addActionListener({
-                isOk = true
-                isVisible = false
+                if (isValidInfo()) {
+                    isOk = true
+                    isVisible = false
+                }
             })
             buttonCancel.addActionListener({ onCancel() })
             addWindowListener(object : WindowAdapter() {
@@ -114,12 +116,17 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
         }
     }
 
-    private fun isValid(): Boolean {
+    private fun isValidInfo(): Boolean {
         if (dengarPermissionsCheckbox.none { it.isSelected } && specialPermissionsCheckbox.none { it.isSelected } ) {
-            JOptionPane.showMessageDialog(null, "");
+            JOptionPane.showMessageDialog(null, "Must select at least one permission.")
             return false
         }
-        return methodNameUI.all { !it.value.isSelected || it.key.text.length > 0 }
+        val methodNames = methodNameUI.filter { it.value.isSelected && it.key.text.length <= 0 }
+        if (methodNames.isNotEmpty()) {
+            JOptionPane.showMessageDialog(null, "Must provide method name for ${methodNames.map { it.value.text }.joinToString { it }}")
+            return false
+        }
+        return true
     }
 
     private fun onCancel() {
