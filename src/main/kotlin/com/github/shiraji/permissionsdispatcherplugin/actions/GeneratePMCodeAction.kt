@@ -10,6 +10,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
 
 class GeneratePMCodeAction : CodeInsightAction() {
+    var model: GeneratePMCodeModel? = null
     override fun getHandler(): CodeInsightActionHandler {
         return GeneratePMCodeHandler()
     }
@@ -31,6 +32,8 @@ class GeneratePMCodeAction : CodeInsightAction() {
         dialog.pack()
         dialog.isVisible = true
         if (dialog.isOk) {
+            val project = e?.getData(CommonDataKeys.PROJECT) ?: return
+            model = GeneratePMCodeModel(project)
             super.actionPerformed(e)
         }
     }
