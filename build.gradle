@@ -28,7 +28,7 @@ intellij {
     }
 }
 
-group 'com.github.shiraji.permissionsdispatcher'
+group 'com.github.shiraji.permissionsdispatcherplugin'
 version '1.0.0'
 
 repositories {
