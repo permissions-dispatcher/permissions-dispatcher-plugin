@@ -6,7 +6,7 @@ import javax.swing.JOptionPane
 
 class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
-    val dengarPermissionsCheckbox = listOf<JCheckBox>(
+    val dangerPermissionsCheckbox = listOf<JCheckBox>(
             dialog.readCalendar, dialog.writeCalendar, dialog.camera, dialog.readContacts,
             dialog.writeContacts, dialog.getAccounts, dialog.accessFineLocation,
             dialog.accessCoarseLocation, dialog.recordAudio, dialog.readPhoneState,
@@ -35,7 +35,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             addCancelAction()
         }
 
-        dengarPermissionsCheckbox.forEach {
+        dangerPermissionsCheckbox.forEach {
             it.addChangeListener {
                 val checkBox: JCheckBox = it.source as JCheckBox
                 if (checkBox.isSelected) {
@@ -50,7 +50,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             it.addChangeListener {
                 val checkBox = it.source as JCheckBox
                 if (checkBox.isSelected) {
-                    dengarPermissionsCheckbox.forEach {
+                    dangerPermissionsCheckbox.forEach {
                         it.isSelected = false
                     }
 
@@ -75,7 +75,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
     }
 
     private fun isValidInfo(): Boolean {
-        if (dengarPermissionsCheckbox.none { it.isSelected } && specialPermissionsCheckbox.none { it.isSelected } ) {
+        if (dangerPermissionsCheckbox.none { it.isSelected } && specialPermissionsCheckbox.none { it.isSelected } ) {
             JOptionPane.showMessageDialog(null, "Must select at least one permission.")
             return false
         }
@@ -88,7 +88,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
     }
 
     fun getSelectedPermissions(): List<String> {
-        return setOf(*dengarPermissionsCheckbox.toTypedArray(), *specialPermissionsCheckbox.toTypedArray()).filter {
+        return setOf(*dangerPermissionsCheckbox.toTypedArray(), *specialPermissionsCheckbox.toTypedArray()).filter {
             it.isSelected
         }.map {
             it.text
