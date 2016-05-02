@@ -28,11 +28,9 @@ class GeneratePMCodeAction : CodeInsightAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent?) {
-        val dialog = GeneratePMCodeDialog()
-        dialog.pack()
-        dialog.isVisible = true
-        if (dialog.isOk) {
-            val project = e?.getData(CommonDataKeys.PROJECT) ?: return
+        val project = e?.getData(CommonDataKeys.PROJECT) ?: return
+        val dialog = GeneratePMCodeDialog(project)
+        if (dialog.showAndGet()) {
             model = GeneratePMCodeModel(project)
 
             model?.apply {

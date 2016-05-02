@@ -1,11 +1,8 @@
 package com.github.shiraji.permissionsdispatcherplugin.views
 
-import java.awt.event.KeyEvent
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
-import javax.swing.*
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
+import com.intellij.openapi.ui.DialogWrapper
+import javax.swing.JCheckBox
+import javax.swing.JOptionPane
 
 class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
@@ -28,26 +25,15 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
 
     fun initDialog() {
         dialog.apply {
-            setContentPane(contentPane)
-            isModal = true
-            defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
-            getRootPane().defaultButton = buttonOK
-            buttonOK.addActionListener({
+            setTitle("PermissionsDispatcher Plugin")
+            addOkAction().setText("Generate")
+            setOkOperation({
                 if (isValidInfo()) {
-                    isOk = true
-                    isVisible = false
+                    dialogWrapper.close(DialogWrapper.OK_EXIT_CODE, false)
                 }
             })
-            buttonCancel.addActionListener({ onCancel() })
-            addWindowListener(object : WindowAdapter() {
-                override fun windowClosing(e: WindowEvent?) {
-                    onCancel()
-                }
-            })
-
-            // call onCancel() on ESCAPE
-            contentPane.registerKeyboardAction({ onCancel() }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-
+            addCancelAction()
+            setCancelOperation({ dialogWrapper.close(DialogWrapper.CANCEL_EXIT_CODE, false) })
         }
 
         dengarPermissionsCheckbox.forEach {
@@ -81,33 +67,6 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
         methodNameUI.forEach {
             val jCheckBox = it.value
             val jTextField = it.key
-            jTextField.document.addDocumentListener(object : DocumentListener {
-                // TODO This does not help if a user leaves multiple method names blank
-                override fun changedUpdate(e: DocumentEvent?) {
-                    validateMethodName()
-                }
-
-                override fun insertUpdate(e: DocumentEvent?) {
-                    validateMethodName()
-                }
-
-                override fun removeUpdate(e: DocumentEvent?) {
-                    validateMethodName()
-                }
-
-                private fun validateMethodName() {
-                    if (!jCheckBox.isSelected) {
-                        return
-                    }
-
-                    if (jTextField.text.length <= 0) {
-                        dialog.buttonOK.isEnabled = false
-                    } else {
-                        dialog.buttonOK.isEnabled = true
-                    }
-                }
-            })
-
             jCheckBox.addChangeListener {
                 val checkBox = it.source as JCheckBox
                 jTextField.isEditable = checkBox.isSelected
@@ -127,10 +86,6 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             return false
         }
         return true
-    }
-
-    private fun onCancel() {
-        dialog.isVisible = false
     }
 
     fun getSelectedPermissions(): List<String> {

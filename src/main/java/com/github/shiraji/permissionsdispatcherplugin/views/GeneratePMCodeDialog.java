@@ -1,12 +1,14 @@
 package com.github.shiraji.permissionsdispatcherplugin.views;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogBuilder;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 
-public class GeneratePMCodeDialog extends JDialog {
+public class GeneratePMCodeDialog extends DialogBuilder {
     JPanel contentPane;
-    JButton buttonOK;
-    JButton buttonCancel;
     JCheckBox readCalendar;
     JCheckBox writeCalendar;
     JCheckBox camera;
@@ -46,26 +48,17 @@ public class GeneratePMCodeDialog extends JDialog {
     public JTextField onNeverAskAgainTextField;
     public JCheckBox onNeverAskAgainCheckBox;
 
-    public boolean isOk = false;
-
     private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
 
-    public GeneratePMCodeDialog() {
+    public GeneratePMCodeDialog(@Nullable Project project) {
+        super(project);
         generatePMCodeDialogDelegate = new GeneratePMCodeDialogDelegate(this);
         generatePMCodeDialogDelegate.initDialog();
+        setCenterPanel(contentPane);
     }
 
     public List<String> getSelectedPermissions() {
         return generatePMCodeDialogDelegate.getSelectedPermissions();
     }
 
-    public static void main(String[] args) {
-        GeneratePMCodeDialog dialog = new GeneratePMCodeDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        if (dialog.isOk) {
-            System.out.println("ok!");
-        }
-        System.exit(0);
-    }
 }
