@@ -33,7 +33,6 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                 }
             })
             addCancelAction()
-            setCancelOperation({ dialogWrapper.close(DialogWrapper.CANCEL_EXIT_CODE, false) })
         }
 
         dengarPermissionsCheckbox.forEach {
