@@ -15,8 +15,8 @@
     <actions>
         <action id="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
                 class="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
-                text="Generate Runtime Permissions">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+                text="Generate Runtime Permissions...">
+            <add-to-group group-id="JavaGenerateGroup1" anchor="last"/>
         </action>
     </actions>
 
