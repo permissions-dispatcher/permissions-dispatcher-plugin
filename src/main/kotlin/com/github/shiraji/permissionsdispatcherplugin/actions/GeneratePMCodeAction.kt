@@ -5,9 +5,11 @@ import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeDialog
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
+import com.intellij.compiler.actions.CompileProjectAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
+import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
     var model: GeneratePMCodeModel? = null
@@ -44,6 +46,15 @@ class GeneratePMCodeAction : CodeInsightAction() {
             }
 
             super.actionPerformed(e)
+
+            afterActionPerformed(e)
+        }
+    }
+
+    private fun afterActionPerformed(e: AnActionEvent?) {
+        val result = JOptionPane.showOptionDialog(null, "Do you want to rebuild this project?", "PermissionsManager Plugin", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, arrayOf("Rebuild", "Cancel"), null)
+        if (result == JOptionPane.YES_OPTION) {
+            CompileProjectAction().actionPerformed(e)
         }
     }
 }
