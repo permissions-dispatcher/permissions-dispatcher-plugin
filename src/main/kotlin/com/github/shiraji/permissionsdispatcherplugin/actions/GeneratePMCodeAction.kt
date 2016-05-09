@@ -19,10 +19,12 @@ class GeneratePMCodeAction : CodeInsightAction() {
         e ?: return
         super.update(e)
 
-        val file = e.getData(CommonDataKeys.PSI_FILE) ?: return
-        if (file !is PsiJavaFile) return
-
-        val project = e.getData(CommonDataKeys.PROJECT) ?: return
+        val project = e.getData(CommonDataKeys.PROJECT)
+        val file = e.getData(CommonDataKeys.PSI_FILE)
+        if (project == null || file == null || file !is PsiJavaFile) {
+            e.presentation.isEnabledAndVisible = false
+            return
+        }
 
         e.presentation.isEnabledAndVisible = GeneratePMCodeModel(project).isActivityOrFragment(file.classes[0])
     }
