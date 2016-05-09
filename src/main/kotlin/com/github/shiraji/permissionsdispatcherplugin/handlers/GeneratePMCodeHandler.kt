@@ -13,7 +13,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         if (file !is PsiJavaFile) return
-        addRuntimePermissionAnnotation(file, project)
+        addRuntimePermissionAnnotation(file)
         addNeedsPermissionMethod(file, project)
         addOnRequestPermissionsResult(file, project)
         addOnShowRationale(file, project)
@@ -84,7 +84,7 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
         file.classes[0].add(method)
     }
 
-    private fun addRuntimePermissionAnnotation(file: PsiJavaFile, project: Project) {
+    private fun addRuntimePermissionAnnotation(file: PsiJavaFile) {
         if (file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") != null) return
         file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
         file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions"))
