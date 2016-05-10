@@ -15,7 +15,11 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
         if (file !is PsiJavaFile) return
         addRuntimePermissionAnnotation(file)
         addNeedsPermissionMethod(file, project)
-        addOnRequestPermissionsResult(file, project)
+        if (model.isSpecialPermissions()) {
+            addOnActivityResult(file, project)
+        } else {
+            addOnRequestPermissionsResult(file, project)
+        }
         addOnShowRationale(file, project)
         addOnPermissionDenied(file, project)
         addOnNeverAskAgain(file, project)
@@ -69,6 +73,23 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
             file.classes[0].add(method)
         } else {
             // TODO check there is XxxPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults); and if not, add the line
+        }
+    }
+
+    private fun addOnActivityResult(file: PsiJavaFile, project: Project) {
+        val methods = file.classes[0].findMethodsByName("onActivityResult", false)
+        if (methods.size == 0) {
+            val methodTemplate = """public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                ${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, requestCode);
+            }""".trimMargin()
+
+            val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
+            method.modifierList.addAnnotation("Override")
+            file.importClass(model.createPsiClass("android.content.Intent"))
+            file.classes[0].add(method)
+        } else {
+            // TODO check there is XxxPermissionsDispatcher.onRequestPermissionsResult(this, requestCode); and if not, add the line
         }
     }
 

@@ -11,6 +11,8 @@ class GeneratePMCodeModel(val project: Project) {
     private val fragmentPsiClass: PsiClass? = createPsiClass("android.app.Fragment")
     private val supportFragmentPsiClass: PsiClass? = createPsiClass("android.support.v4.app.Fragment")
 
+    private val specialPermissionNames = listOf("SYSTEM_ALERT_WINDOW", "WRITE_SETTINGS")
+
     var permissions: List<String> = emptyList()
 
     var needsPermissionMethodName: String = ""
@@ -47,5 +49,9 @@ class GeneratePMCodeModel(val project: Project) {
             1 -> "Manifest.permission.${permissions[0]}"
             else -> "{${permissions.map { "Manifest.permission.$it" }.joinToString { it }}}"
         }
+    }
+
+    fun isSpecialPermissions(): Boolean {
+        return permissions.size == 1 && specialPermissionNames.contains(permissions[0])
     }
 }
