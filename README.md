@@ -8,17 +8,13 @@ PermissionsDispatcher is wonderful library for Runtime Permissions. However, it 
 
 * Open Activity/Fragment
 * `Generate` -> `Generate Runtime Permissions...`
-
-![generate](website/images/generate.png)
 * Choose permissions and enter method names for each annotations
-
-![popup](website/images/popup.png)
-
-(For instance, choose READ_CALENDAR and type NeedsPermission's method name as `readCalendar`)
 * Click `Generate` button
 * Done!
 
-![done](website/images/done.png)
+![gif](website/images/pd.gif)
+
+(It skips "rebuild" for making gif small, but it is highly recommended to rebuild after generating codes.)
 
 # How to install?
 
