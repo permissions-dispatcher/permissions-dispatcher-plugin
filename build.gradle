@@ -15,6 +15,9 @@ plugins {
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'kotlin'
 
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
 intellij {
     version '15.0.4'
     pluginName 'PermissionsDispatcher plugin'
