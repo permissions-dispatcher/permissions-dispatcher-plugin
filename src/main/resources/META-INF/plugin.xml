@@ -4,9 +4,16 @@
     <vendor email="isogai.shiraji@gmail.com" url="https://github.com/shiraji">Shiraji</vendor>
 
     <description><![CDATA[
+    IntelliJ plugin for supporting PermissionsDispatcher. This is NOT official plugin.
+
+    PermissionsDispatcher is wonderful library for Runtime Permissions. However, it asks developers "attach annotations" and "delegate to generated class" and then after that "rebuild". It's hard to follow all steps correctly. This plugin generates the skelton of methods for "attach annotations" and "delegate to generated class" using GUI.
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>1.0.0</p>
+        <ul>
+          <li>Initial release</li>
+        </ul>
     ]]>
     </change-notes>
 
