@@ -27,7 +27,7 @@ intellij {
     publish {
         username 'shiraji'
         password System.getenv('PASSWORD')
-        //pluginId '8262'
+        pluginId '8349'
     }
 }
 
