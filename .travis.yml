@@ -1,0 +1,19 @@
+language: java
+env:
+  matrix:
+  - IDEA_VERSION=IC-15.0.4
+  - IDEA_VERSION=LATEST-EAP-SNAPSHOT
+  global:
+jdk:
+- oraclejdk7
+- oraclejdk8
+script:
+- ./gradlew test -PideaVersion=$IDEA_VERSION
+notifications:
+  email: false
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
+after_success:
+- .travis/after_success.sh
