@@ -20,6 +20,10 @@ PermissionsDispatcher is wonderful library for Runtime Permissions. However, it 
 
 Use the IDE's plugin manager to install the latest version of the plugin.
 
+# Supported PermissionsDispatcher version
+
+[2.1.3](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.1.3)
+
 ## License
 
 ```
