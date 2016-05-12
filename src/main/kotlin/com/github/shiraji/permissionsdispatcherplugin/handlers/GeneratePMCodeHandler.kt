@@ -72,7 +72,12 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
             method.modifierList.addAnnotation("Override")
             file.classes[0].add(method)
         } else {
-            // TODO check there is XxxPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults); and if not, add the line
+            val statement = "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${methods[0].parameterList.parameters[0].name}, ${methods[0].parameterList.parameters[2].name});"
+            val hasDelegation = methods[0].body?.text?.contains(statement) ?: false
+            if (!hasDelegation) {
+                val expression = JavaPsiFacade.getElementFactory(project).createStatementFromText(statement, file.classes[0])
+                methods[0].body?.add(expression)
+            }
         }
     }
 
@@ -89,7 +94,12 @@ class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionH
             file.importClass(model.createPsiClass("android.content.Intent"))
             file.classes[0].add(method)
         } else {
-            // TODO check there is XxxPermissionsDispatcher.onRequestPermissionsResult(this, requestCode); and if not, add the line
+            val statement = "${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, ${methods[0].parameterList.parameters[0].name});"
+            val hasDelegation = methods[0].body?.text?.contains(statement) ?: false
+            if (!hasDelegation) {
+                val expression = JavaPsiFacade.getElementFactory(project).createStatementFromText(statement, file.classes[0])
+                methods[0].body?.add(expression)
+            }
         }
     }
 
