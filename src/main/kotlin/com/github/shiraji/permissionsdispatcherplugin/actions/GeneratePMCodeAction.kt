@@ -1,6 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandler
+import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeDialog
 import com.intellij.codeInsight.CodeInsightActionHandler
@@ -9,12 +10,18 @@ import com.intellij.compiler.actions.CompileProjectAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
+import org.jetbrains.kotlin.psi.KtFile
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
-    var model: GeneratePMCodeModel? = null
+    lateinit var model: GeneratePMCodeModel
+    var isKotlin: Boolean = false
     override fun getHandler(): CodeInsightActionHandler {
-        return GeneratePMCodeHandler(model!!)
+        if (isKotlin) {
+            return GeneratePMCodeHandlerKt(model)
+        } else {
+            return GeneratePMCodeHandler(model)
+        }
     }
 
     override fun update(e: AnActionEvent?) {
@@ -23,21 +30,23 @@ class GeneratePMCodeAction : CodeInsightAction() {
 
         val project = e.getData(CommonDataKeys.PROJECT)
         val file = e.getData(CommonDataKeys.PSI_FILE)
-        if (project == null || file == null || file !is PsiJavaFile) {
-            e.presentation.isEnabledAndVisible = false
-            return
+        val clazz = when (file) {
+            is PsiJavaFile -> file.classes[0]
+            is KtFile -> file.classes[0]
+            else -> null
         }
 
-        e.presentation.isEnabledAndVisible = GeneratePMCodeModel(project).isActivityOrFragment(file.classes[0])
+        e.presentation.isEnabledAndVisible = project != null && clazz != null && GeneratePMCodeModel(project).isActivityOrFragment(clazz)
     }
 
     override fun actionPerformed(e: AnActionEvent?) {
         val project = e?.getData(CommonDataKeys.PROJECT) ?: return
+        isKotlin = e!!.getData(CommonDataKeys.PSI_FILE) is KtFile
         val dialog = GeneratePMCodeDialog(project)
         if (dialog.showAndGet()) {
             model = GeneratePMCodeModel(project)
 
-            model?.apply {
+            model.apply {
                 permissions = dialog.selectedPermissions
                 if (dialog.needsPermissionCheckBox.isSelected) needsPermissionMethodName = dialog.needsPermissionTextField.text
                 if (dialog.onShowRationaleCheckBox.isSelected) onShowRationaleMethodName = dialog.onShowRationaleTextField.text
@@ -46,7 +55,6 @@ class GeneratePMCodeAction : CodeInsightAction() {
             }
 
             super.actionPerformed(e)
-
             afterActionPerformed(e)
         }
     }

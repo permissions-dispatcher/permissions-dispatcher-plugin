@@ -51,6 +51,14 @@ class GeneratePMCodeModel(val project: Project) {
         }
     }
 
+    fun toListParameter(): String {
+        return when (permissions.size) {
+            0 -> ""
+            1 -> "Manifest.permission.${permissions[0]}"
+            else -> "${permissions.map { "Manifest.permission.$it" }.joinToString { it }}"
+        }
+    }
+
     fun isSpecialPermissions(): Boolean {
         return permissions.size == 1 && specialPermissionNames.contains(permissions[0])
     }
