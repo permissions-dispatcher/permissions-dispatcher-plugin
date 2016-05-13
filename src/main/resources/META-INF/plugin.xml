@@ -10,9 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.0.1</p>
+        <p>1.1.0</p>
         <ul>
-          <li>[#12] Support inserting onRequestPermissionsResult/onActivityResult call</li>
+          <li>[#5] Support Kotlin</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>
