@@ -20,6 +20,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 intellij {
     version '15.0.4'
+    plugins = ['Kotlin']
     pluginName 'PermissionsDispatcher plugin'
     alternativeIdePath '/Applications/Android Studio.app'
     updateSinceUntilBuild = false

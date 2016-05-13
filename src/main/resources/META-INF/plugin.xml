@@ -20,6 +20,8 @@
 
     <idea-version since-build="143"/>
 
+    <depends>org.jetbrains.kotlin</depends>
+
     <actions>
         <action id="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
                 class="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
