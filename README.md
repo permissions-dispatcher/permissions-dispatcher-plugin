@@ -6,6 +6,7 @@ PermissionsDispatcher is wonderful library for Runtime Permissions. However, it 
 
 # How to use?
 
+* Download [PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher#download)
 * Open Activity/Fragment
 * `Generate` -> `Generate Runtime Permissions...`
 * Choose permissions and enter method names for each annotations
