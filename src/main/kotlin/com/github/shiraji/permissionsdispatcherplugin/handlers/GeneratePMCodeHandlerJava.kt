@@ -91,7 +91,7 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
     }
 
     override fun addImport(import: String) {
-        file.importClass(model.createPsiClass(import))
+        file.importClass(model.createPsiClass(import) ?: return)
     }
 
 }
