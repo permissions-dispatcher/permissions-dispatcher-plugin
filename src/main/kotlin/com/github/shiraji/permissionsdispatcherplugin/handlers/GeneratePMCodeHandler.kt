@@ -72,6 +72,7 @@ abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsig
             addMethod(createOnActivityResultMethodTemplate(), "Override")
         } else {
             addStatementToMethod(createOnActivityResultStatementTemplate(), "onActivityResult")
+            addImport("android.content.Intent")
         }
     }
 
