@@ -61,17 +61,17 @@ abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsig
 
     fun addOnRequestPermissionsResult() {
         if (hasMethod("onRequestPermissionsResult")) {
-            addMethod(createOnRequestPermissionsResultMethodTemplate(), "Override")
-        } else {
             addStatementToMethod(createOnRequestPermissionsResultStatementTemplate(), "onRequestPermissionsResult")
+        } else {
+            addMethod(createOnRequestPermissionsResultMethodTemplate(), "Override")
         }
     }
 
     fun addOnActivityResult() {
         if (hasMethod("onActivityResult")) {
-            addMethod(createOnActivityResultMethodTemplate(), "Override")
-        } else {
             addStatementToMethod(createOnActivityResultStatementTemplate(), "onActivityResult")
+        } else {
+            addMethod(createOnActivityResultMethodTemplate(), "Override")
             addImport("android.content.Intent")
         }
     }
