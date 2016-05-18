@@ -4,10 +4,7 @@ import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.ImportPath
 
 class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandler(model) {
@@ -65,12 +62,17 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
     }
 
     override fun addStatementToMethod(statement: String, methodName: String) {
-        // TODO implement this to insert statement to existing method
+        val method = getMethod(methodName) ?: return
+        val hasStatement = method.bodyExpression?.text?.contains(statement) ?: false
+        if (!hasStatement) {
+            method.bodyExpression?.addBefore(KtPsiFactory(project).createExpression(statement), (method.bodyExpression as KtBlockExpression).rBrace)
+        }
     }
 
     private fun getMethod(methodName: String): KtNamedFunction? {
         val clazz = file.declarations[0] as KtClass
-        return clazz.getBody()?.children?.find { (it as KtNamedFunction).name == methodName } as KtNamedFunction
+        val method = clazz.getBody()?.children?.find { (it as KtNamedFunction).name == methodName } ?: return null
+        return method as KtNamedFunction
     }
 
     override fun hasMethod(name: String): Boolean {
