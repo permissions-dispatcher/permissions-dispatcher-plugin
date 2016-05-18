@@ -46,7 +46,7 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
 
     override fun createOnRequestPermissionsResultStatementTemplate(): String {
         val method = getMethod("onRequestPermissionsResult")
-        return "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${method!!.valueParameters[0].name}, ${method.valueParameters[2].name}))"
+        return "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${method!!.valueParameters[0].name}, ${method.valueParameters[2].name})"
     }
 
     override fun createOnActivityResultMethodTemplate(): String {
