@@ -80,7 +80,7 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
     }
 
     override fun addPMMethod(methodTemplate: String, annotation: String) {
-        addMethod(methodTemplate, "$annotation${model.toListParameter()}")
+        addMethod(methodTemplate, "$annotation(${model.toListParameter()})")
     }
 
     override fun addMethod(methodTemplate: String, annotation: String) {

@@ -76,7 +76,7 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
     }
 
     override fun addPMMethod(methodTemplate: String, annotation: String) {
-        addMethod(methodTemplate, "$annotation${model.toPermissionParameter()}")
+        addMethod(methodTemplate, "$annotation(${model.toPermissionParameter()})")
     }
 
     override fun addMethod(methodTemplate: String, annotation: String) {
