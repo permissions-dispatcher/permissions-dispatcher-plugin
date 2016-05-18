@@ -1,6 +1,6 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
-import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandler
+import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerJava
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeDialog
@@ -20,7 +20,7 @@ class GeneratePMCodeAction : CodeInsightAction() {
         if (isKotlin) {
             return GeneratePMCodeHandlerKt(model)
         } else {
-            return GeneratePMCodeHandler(model)
+            return GeneratePMCodeHandlerJava(model)
         }
     }
 

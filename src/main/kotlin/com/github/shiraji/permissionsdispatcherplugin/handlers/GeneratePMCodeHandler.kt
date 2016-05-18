@@ -4,121 +4,89 @@ import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiJavaFile
 
-class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionHandler {
+abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsightActionHandler {
+    lateinit var project: Project
+    lateinit var editor: Editor
+
     override fun startInWriteAction() = true
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-        if (file !is PsiJavaFile) return
-        addRuntimePermissionAnnotation(file)
-        addNeedsPermissionMethod(file, project)
+        this.project = project
+        this.editor = editor
+
+        addRuntimePermissionAnnotation()
+        addNeedsPermissionMethod()
         if (model.isSpecialPermissions()) {
-            addOnActivityResult(file, project)
+            addOnActivityResult()
         } else {
-            addOnRequestPermissionsResult(file, project)
+            addOnRequestPermissionsResult()
         }
-        addOnShowRationale(file, project)
-        addOnPermissionDenied(file, project)
-        addOnNeverAskAgain(file, project)
+        addOnShowRationale()
+        addOnPermissionDenied()
+        addOnNeverAskAgain()
     }
 
-    private fun addOnNeverAskAgain(file: PsiJavaFile, project: Project) {
-        if (model.onNeverAskAgainMethodName.length <= 0) return
-        val methodTemplate = """void ${model.onNeverAskAgainMethodName}() {
-        }""".trimMargin()
-
-        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-        method.modifierList.addAnnotation("OnNeverAskAgain(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnNeverAskAgain"))
-        file.classes[0].add(method)
+    fun addRuntimePermissionAnnotation() {
+        addAnnotationToClass("permissions.dispatcher.RuntimePermissions", "RuntimePermissions")
+        addImport("permissions.dispatcher.RuntimePermissions")
     }
 
-    private fun addOnPermissionDenied(file: PsiJavaFile, project: Project) {
-        if (model.onPermissionDeniedMethodName.length <= 0) return
-        val methodTemplate = """void ${model.onPermissionDeniedMethodName}() {
-        }""".trimMargin()
-
-        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-        method.modifierList.addAnnotation("OnPermissionDenied(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnPermissionDenied"))
-        file.classes[0].add(method)
-    }
-
-    private fun addOnShowRationale(file: PsiJavaFile, project: Project) {
-        if (model.onShowRationaleMethodName.length <= 0) return
-        val methodTemplate = """void ${model.onShowRationaleMethodName}(PermissionRequest request) {
-        }""".trimMargin()
-
-        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-        method.modifierList.addAnnotation("OnShowRationale(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.PermissionRequest"))
-        file.importClass(model.createPsiClass("permissions.dispatcher.OnShowRationale"))
-        file.classes[0].add(method)
-    }
-
-    private fun addOnRequestPermissionsResult(file: PsiJavaFile, project: Project) {
-        val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
-
-        if (methods.size == 0) {
-            val methodTemplate = """public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                ${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-            }""".trimMargin()
-
-            val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-            method.modifierList.addAnnotation("Override")
-            file.classes[0].add(method)
-        } else {
-            val statement = "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${methods[0].parameterList.parameters[0].name}, ${methods[0].parameterList.parameters[2].name});"
-            val hasDelegation = methods[0].body?.text?.contains(statement) ?: false
-            if (!hasDelegation) {
-                val expression = JavaPsiFacade.getElementFactory(project).createStatementFromText(statement, file.classes[0])
-                methods[0].body?.add(expression)
-            }
-        }
-    }
-
-    private fun addOnActivityResult(file: PsiJavaFile, project: Project) {
-        val methods = file.classes[0].findMethodsByName("onActivityResult", false)
-        if (methods.size == 0) {
-            val methodTemplate = """public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                ${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, requestCode);
-            }""".trimMargin()
-
-            val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-            method.modifierList.addAnnotation("Override")
-            file.importClass(model.createPsiClass("android.content.Intent"))
-            file.classes[0].add(method)
-        } else {
-            val statement = "${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, ${methods[0].parameterList.parameters[0].name});"
-            val hasDelegation = methods[0].body?.text?.contains(statement) ?: false
-            if (!hasDelegation) {
-                val expression = JavaPsiFacade.getElementFactory(project).createStatementFromText(statement, file.classes[0])
-                methods[0].body?.add(expression)
-            }
-        }
-    }
-
-    private fun addNeedsPermissionMethod(file: PsiJavaFile, project: Project) {
+    fun addNeedsPermissionMethod() {
         if (model.needsPermissionMethodName.length <= 0) return
-        val methodTemplate = """void ${model.needsPermissionMethodName}() {
-        }""".trimMargin()
-
-        val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
-        method.modifierList.addAnnotation("NeedsPermission(${model.toPermissionParameter()})")
-        file.importClass(model.createPsiClass("permissions.dispatcher.NeedsPermission"))
-        file.importClass(model.createPsiClass("android.Manifest"))
-        file.classes[0].add(method)
+        addPMMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission")
+        addImport("permissions.dispatcher.NeedsPermission")
+        addImport("android.Manifest")
     }
 
-    private fun addRuntimePermissionAnnotation(file: PsiJavaFile) {
-        if (file.classes[0].modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") != null) return
-        file.classes[0].modifierList?.addAnnotation("RuntimePermissions")
-        file.importClass(model.createPsiClass("permissions.dispatcher.RuntimePermissions"))
+    fun addOnShowRationale() {
+        if (model.onShowRationaleMethodName.length <= 0) return
+        addPMMethod(createOnShowRationaleMethodTemplate(), "OnShowRationale")
+        addImport("permissions.dispatcher.PermissionRequest")
+        addImport("permissions.dispatcher.OnShowRationale")
     }
 
+    fun addOnPermissionDenied() {
+        if (model.onPermissionDeniedMethodName.length <= 0) return
+        addPMMethod(createOnPermissionDeniedMethodTemplate(), "OnPermissionDenied")
+        addImport("permissions.dispatcher.OnPermissionDenied")
+    }
+
+    fun addOnNeverAskAgain() {
+        if (model.onNeverAskAgainMethodName.length <= 0) return
+        addPMMethod(createOnNeverAskAgainMethodTemplate(), "OnNeverAskAgain")
+        addImport("permissions.dispatcher.OnNeverAskAgain")
+    }
+
+    fun addOnRequestPermissionsResult() {
+        if (hasMethod("onRequestPermissionsResult")) {
+            addMethod(createOnRequestPermissionsResultMethodTemplate(), "Override")
+        } else {
+            addStatementToMethod(createOnRequestPermissionsResultStatementTemplate(), "onRequestPermissionsResult")
+        }
+    }
+
+    fun addOnActivityResult() {
+        if (hasMethod("onActivityResult")) {
+            addMethod(createOnActivityResultMethodTemplate(), "Override")
+        } else {
+            addStatementToMethod(createOnActivityResultStatementTemplate(), "onActivityResult")
+        }
+    }
+
+    abstract fun hasMethod(name: String): Boolean
+    abstract fun createNeedsPermissionMethodTemplate(): String
+    abstract fun createOnShowRationaleMethodTemplate(): String
+    abstract fun createOnPermissionDeniedMethodTemplate(): String
+    abstract fun createOnNeverAskAgainMethodTemplate(): String
+    abstract fun createOnRequestPermissionsResultMethodTemplate(): String
+    abstract fun createOnRequestPermissionsResultStatementTemplate(): String
+    abstract fun createOnActivityResultMethodTemplate(): String
+    abstract fun createOnActivityResultStatementTemplate(): String
+    abstract fun addStatementToMethod(statement: String, methodName: String)
+    abstract fun addPMMethod(methodTemplate: String, annotation: String)
+    abstract fun addMethod(methodTemplate: String, annotation: String)
+    abstract fun addAnnotationToClass(fullName: String, name: String)
+    abstract fun addImport(import: String)
 }
