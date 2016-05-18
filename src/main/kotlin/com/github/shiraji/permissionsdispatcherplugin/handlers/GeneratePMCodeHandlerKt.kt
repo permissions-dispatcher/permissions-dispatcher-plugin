@@ -58,7 +58,7 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
 
     override fun createOnActivityResultStatementTemplate(): String {
         val method = getMethod("onActivityResult")
-        return "super.onActivityResult(this, ${method!!.valueParameters[0].name})"
+        return "${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, ${method!!.valueParameters[0].name})"
     }
 
     override fun addStatementToMethod(statement: String, methodName: String) {
