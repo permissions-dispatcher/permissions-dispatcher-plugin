@@ -23,6 +23,12 @@
 
     <depends>org.jetbrains.kotlin</depends>
 
+    <extensions defaultExtensionNs="com.intellij">
+
+        <applicationConfigurable
+                instance="com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeConfiguration"/>
+    </extensions>
+
     <actions>
         <action id="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
                 class="com.github.shiraji.permissionsdispatcherplugin.actions.GeneratePMCodeAction"
