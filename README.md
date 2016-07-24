@@ -1,4 +1,4 @@
-# permissions-dispatcher-plugin
+# PermissionsDispatcher plugin
 
 IntelliJ plugin for supporting [PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher). This is NOT official plugin.
 
