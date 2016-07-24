@@ -1,5 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
+import com.github.shiraji.permissionsdispatcherplugin.config.GeneratePMCodeConfig
+import com.github.shiraji.permissionsdispatcherplugin.data.RebuildType
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerJava
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
@@ -60,9 +62,19 @@ class GeneratePMCodeAction : CodeInsightAction() {
     }
 
     private fun afterActionPerformed(e: AnActionEvent?) {
-        val result = JOptionPane.showOptionDialog(null, "Do you want to rebuild this project?", "PermissionsManager Plugin", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, arrayOf("Rebuild", "Cancel"), null)
-        if (result == JOptionPane.YES_OPTION) {
-            CompileProjectAction().actionPerformed(e)
+        when (RebuildType.fromId(GeneratePMCodeConfig.rebuildTypeId)) {
+            RebuildType.ALWAYS -> rebuild(e)
+            RebuildType.PROMPT -> {
+                val result = JOptionPane.showOptionDialog(null, "Do you want to rebuild this project?", "PermissionsManager Plugin", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, arrayOf("Rebuild", "Cancel"), null)
+                if (result == JOptionPane.YES_OPTION) {
+                    rebuild(e)
+                }
+            }
+            RebuildType.NOT_ALWAYS -> println("Skip rebuild.")
         }
+    }
+
+    private fun rebuild(e: AnActionEvent?) {
+        CompileProjectAction().actionPerformed(e)
     }
 }

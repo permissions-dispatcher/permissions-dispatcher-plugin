@@ -17,6 +17,20 @@ PermissionsDispatcher is wonderful library for Runtime Permissions. However, it 
 
 (It skips "rebuild" for making gif small, but it is highly recommended to rebuild after generating codes.)
 
+# Settings
+
+You can change `PermissionsDispatcher plugin` from `Preferences... > Other Settings > PermissionsDispatcher plugin`
+
+## Rebuild
+
+There are 3 behaviors for rebuilding project after generating PermissionsDispatcher code.
+ 
+| Type             | Behavior                      |
+|------------------|-------------------------------|
+| Prompt (Default) | Show dialog                   |
+| Always           | Always rebuild without dialog |
+| Not Always       | Does not rebuild              |
+
 # How to install?
 
 Use the IDE's plugin manager to install the latest version of the plugin.
