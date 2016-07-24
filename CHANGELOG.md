@@ -1,3 +1,7 @@
+### [ver 1.2.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/v1.2.0)
+
+* [#24] Add rebuild settings
+
 ### [ver 1.1.1](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/v1.1.1)
 
 * [#16] Support inserting onRequestPermissionsResult/onActivityResult call for Kotlin
