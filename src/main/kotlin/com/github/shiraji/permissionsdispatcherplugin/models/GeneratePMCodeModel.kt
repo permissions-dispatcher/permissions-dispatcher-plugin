@@ -20,6 +20,8 @@ class GeneratePMCodeModel(val project: Project) {
     var onPermissionDeniedMethodName: String = ""
     var onNeverAskAgainMethodName: String = ""
 
+    var maxSdkVersion: Int = -1
+
     fun isActivity(aClass: PsiClass): Boolean {
         activityPsiClass ?: return false
         return aClass.isInheritor(activityPsiClass, true)

@@ -35,7 +35,7 @@ abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsig
 
     fun addNeedsPermissionMethod() {
         if (model.needsPermissionMethodName.length <= 0) return
-        addPMMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission")
+        createNeedsPermissionMethod()
         addImport("permissions.dispatcher.NeedsPermission")
         addImport("android.Manifest")
     }
@@ -87,6 +87,7 @@ abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsig
     abstract fun createOnActivityResultStatementTemplate(): String
     abstract fun addStatementToMethod(statement: String, methodName: String)
     abstract fun addPMMethod(methodTemplate: String, annotation: String)
+    abstract fun createNeedsPermissionMethod()
     abstract fun addMethod(methodTemplate: String, annotation: String)
     abstract fun addAnnotationToClass(fullName: String, name: String)
     abstract fun addImport(import: String)

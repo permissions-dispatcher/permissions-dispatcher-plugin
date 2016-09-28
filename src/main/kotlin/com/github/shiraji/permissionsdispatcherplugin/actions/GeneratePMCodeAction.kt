@@ -54,6 +54,10 @@ class GeneratePMCodeAction : CodeInsightAction() {
                 if (dialog.onShowRationaleCheckBox.isSelected) onShowRationaleMethodName = dialog.onShowRationaleTextField.text
                 if (dialog.onPermissionDeniedCheckBox.isSelected) onPermissionDeniedMethodName = dialog.onPermissionDeniedTextField.text
                 if (dialog.onNeverAskAgainCheckBox.isSelected) onNeverAskAgainMethodName = dialog.onNeverAskAgainTextField.text
+                val maxSdkVersionText = dialog.maxSdkVersionTextField.text
+                if (maxSdkVersionText != null && maxSdkVersionText.isNotBlank()) {
+                    maxSdkVersion = maxSdkVersionText.toInt()
+                }
             }
 
             super.actionPerformed(e)
