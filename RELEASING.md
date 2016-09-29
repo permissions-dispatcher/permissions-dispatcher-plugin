@@ -1,5 +1,5 @@
+* `./gradlew prepareForRelease` (In case stop releasing after running this command, make sure removing `.travis/release`)
 * Add CHANGELOG.md to what changes for new version
-* Delete -SNAPSHOT from build.gralde (e.g. `version '1.0.3-SNAPSHOT'` -> `version '1.0.3'`)
 * Add plugin.xml change note
 ```xml
     <change-notes><![CDATA[
@@ -11,9 +11,6 @@
     ]]>
     </change-notes>
 ```
-* `touch .travis/release`
 * Commit & push changes
+* Check [travis ci](https://travis-ci.org/shiraji/permissions-dispatcher-plugin) to successfully release the module
 * Create Release Tag (Upload archive file as well)
-* Check [travis ci](https://travis-ci.org/shiraji/find-pull-request) to successfully release the module
-* `rm .travis/release`
-* Prepare for next version (e.g. `version '1.0.3'` -> `version '1.0.4-SNAPSHOT'`)
