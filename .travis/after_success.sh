@@ -34,6 +34,16 @@ else
   if [ -f .travis/release ]; then
     echo "Start releasing..."
     ./gradlew publishPlugin
+    git checkout master
+    git config user.name "Travis CI"
+    git config user.email "isogai.shiraji@gmail.com"
+    git tag `cat VERSION`
+    git push git@github.com:${USER}/${REPO}.git `cat VERSION`
+    git rm .travis/release
+    ./gradlew prepareForNextDevelopment
+    git add VERSION
+    git commit -m "[skip ci] prepare next development"
+    git push git@github.com:${USER}/${REPO}.git $BRANCH
   else
     echo "No .travis/release file"
   fi
