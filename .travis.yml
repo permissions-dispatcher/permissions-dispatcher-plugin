@@ -1,12 +1,10 @@
 language: java
 env:
   matrix:
-  - IDEA_VERSION=IC-15.0.4
   - IDEA_VERSION=LATEST-EAP-SNAPSHOT
   global:
   - secure: bMBnlJUD1yEtxIzAbsNnmQQRF823Ech/oqYXLB3qCPrYBkcdn8wJdLEQirYlD5xlorjRLJOQEpw0EnrZ/K4mMtp5Col7avsPUqCZ5HAbrWs9GS0ZyA1esKTZeZZ6QK6KXRIXFxgLrLbApt4JWA8vV5EUbwec2DuAL/qEgJQOxh7LaehrlfyF4qyBjK+8XggrfQ8qgDuYDBP4GiuYhdzbXzhj+rJGerwqr1hlatlP6PqZCv3V1doH63UMdx6sv4ndPBAVu3Co7kQ09AxEya2eMmUyxTJds/aWheUiSHL7rowjPa5NXkx0v4IinFzXWze6mgkMUnl4F5hqk5wxO8aeUSRRdUzgUMLtV61Yyb3O1JDAJlVngntsjXMcxLHhWaDgZaxAL+GK4ESG00R+3z/2QPn2dyb91iGm4G2tqCm/tIgjaAMxOmR6XxCPJtoULcFk/SQA5CUFA9ln/7CRpy25VCenFONaUwxBbTcKP4ONwQV2rrdNU/px6a7hSZ+LK7Hm2C9R1aLI8nEhyh0IHcHM0bCsimIIXfuLzG86+UiVjcWMUSoGn2rN90xMdg75aw53gzMVaY9CMvhHJqoTdZVzRJfKrZLiK1ptDWesIlFRdFgLXudJ8i/2hI6CJt9jt0uoP+jpivjV6SbK8FTCS6c49rwPWbhqHxt7GLT3WpSJI6c=
 jdk:
-- oraclejdk7
 - oraclejdk8
 script:
 - ./gradlew test -PideaVersion=$IDEA_VERSION
