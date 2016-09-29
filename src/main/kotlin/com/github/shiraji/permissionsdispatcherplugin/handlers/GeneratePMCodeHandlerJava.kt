@@ -79,6 +79,14 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
         addMethod(methodTemplate, "$annotation(${model.toPermissionParameter()})")
     }
 
+    override fun createNeedsPermissionMethod() {
+        if (model.maxSdkVersion < 0) {
+            addMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission(${model.toPermissionParameter()})")
+        } else {
+            addMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission(value = ${model.toPermissionParameter()}, maxSdkVersion = ${model.maxSdkVersion})")
+        }
+    }
+
     override fun addMethod(methodTemplate: String, annotation: String) {
         val method = JavaPsiFacade.getElementFactory(project).createMethodFromText(methodTemplate, file.classes[0])
         method.modifierList.addAnnotation(annotation)

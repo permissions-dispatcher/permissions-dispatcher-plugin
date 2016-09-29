@@ -1,6 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.views
 
 import com.intellij.openapi.ui.DialogWrapper
+import java.lang.NumberFormatException
 import javax.swing.JCheckBox
 import javax.swing.JOptionPane
 
@@ -82,6 +83,19 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
         val methodNames = methodNameUI.filter { it.value.isSelected && it.key.text.length <= 0 }
         if (methodNames.isNotEmpty()) {
             JOptionPane.showMessageDialog(null, "Must provide method name for ${methodNames.map { it.value.text }.joinToString { it }}")
+            return false
+        }
+        return isValidMaxSdkVersion()
+    }
+
+    private fun isValidMaxSdkVersion(): Boolean {
+        val maxSdkVersionText = dialog.maxSdkVersionTextField.text ?: return true
+        try {
+            if (maxSdkVersionText.isNotBlank()) {
+                maxSdkVersionText.toInt()
+            }
+        } catch(e: NumberFormatException) {
+            JOptionPane.showMessageDialog(null, "maxSdkVersion should be an integer")
             return false
         }
         return true

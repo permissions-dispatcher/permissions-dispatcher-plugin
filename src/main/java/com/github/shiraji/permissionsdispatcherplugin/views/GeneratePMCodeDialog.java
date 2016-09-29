@@ -47,6 +47,7 @@ public class GeneratePMCodeDialog extends DialogBuilder {
 
     public JTextField onNeverAskAgainTextField;
     public JCheckBox onNeverAskAgainCheckBox;
+    public JTextField maxSdkVersionTextField;
 
     private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
 

@@ -83,6 +83,14 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
         addMethod(methodTemplate, "$annotation(${model.toListParameter()})")
     }
 
+    override fun createNeedsPermissionMethod() {
+        if (model.maxSdkVersion < 0) {
+            addMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission(${model.toListParameter()})")
+        } else {
+            addMethod(createNeedsPermissionMethodTemplate(), "NeedsPermission(${model.toListParameter()}, maxSdkVersion = ${model.maxSdkVersion})")
+        }
+    }
+
     override fun addMethod(methodTemplate: String, annotation: String) {
         val psiFactory = KtPsiFactory(project)
         val function = psiFactory.createFunction(methodTemplate)
