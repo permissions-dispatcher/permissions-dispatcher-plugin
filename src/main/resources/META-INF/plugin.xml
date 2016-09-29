@@ -10,9 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.2.0</p>
+        <p>1.3.0</p>
         <ul>
-          <li>[#24] Add rebuild settings</li>
+          <li>[#26] Support maxSdkVersion</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

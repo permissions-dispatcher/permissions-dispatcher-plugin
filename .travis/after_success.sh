@@ -8,7 +8,7 @@ REPO="permissions-dispatcher-plugin"
 
 # Change if necessary
 USER="shiraji"
-JDK="oraclejdk7"
+JDK="oraclejdk8"
 BRANCH="master"
 
 # Not handling errors
