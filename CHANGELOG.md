@@ -1,4 +1,4 @@
-### [ver 1.3.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/v1.3.0)
+### [ver 1.3.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.3.0)
 
 * [#26] Support maxSdkVersion
 
