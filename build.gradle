@@ -24,8 +24,8 @@ ext {
 }
 
 intellij {
-    version '15.0.4'
-    plugins = ['Kotlin']
+    version '2016.1.3'
+    plugins = ['Kotlin', 'Groovy']
     pluginName 'PermissionsDispatcher plugin'
     alternativeIdePath '/Applications/Android Studio.app'
     updateSinceUntilBuild = false

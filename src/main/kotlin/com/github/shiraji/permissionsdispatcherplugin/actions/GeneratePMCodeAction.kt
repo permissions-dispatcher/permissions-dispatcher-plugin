@@ -1,6 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
 import com.github.shiraji.permissionsdispatcherplugin.config.GeneratePMCodeConfig
+import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion
 import com.github.shiraji.permissionsdispatcherplugin.data.RebuildType
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerJava
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
@@ -12,7 +13,13 @@ import com.intellij.compiler.actions.CompileProjectAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
+import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrCommandArgumentList
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.path.GrMethodCallExpression
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
@@ -43,8 +50,32 @@ class GeneratePMCodeAction : CodeInsightAction() {
 
     override fun actionPerformed(e: AnActionEvent?) {
         val project = e?.getData(CommonDataKeys.PROJECT) ?: return
-        isKotlin = e!!.getData(CommonDataKeys.PSI_FILE) is KtFile
-        val dialog = GeneratePMCodeDialog(project)
+        isKotlin = e?.getData(CommonDataKeys.PSI_FILE) is KtFile
+
+        var pdVersion: PdVersion = PdVersion.UNKNOWN
+
+        // I think it should not be filter build.gradle. Find all .gradle files.
+        FilenameIndex.getFilesByName(project, "build.gradle", GlobalSearchScope.projectScope(project)).forEach {
+            if(it is GroovyFile) {
+                val dependenciesBlock = it.findDescendantOfType<GrMethodCallExpression> {
+                    it.invokedExpression.text == "dependencies"
+                }
+
+                val pdLine = dependenciesBlock?.findDescendantOfType<GrCommandArgumentList> {
+                    it.text.contains("com.github.hotchemi:permissionsdispatcher:")
+                }
+
+                pdLine?.text?.let {
+                    text ->
+                    // for now, forget about variables...
+                    val versionText = text.substring(text.lastIndexOf(":") + 1).replace("\'", "").replace("\"", "")
+                    pdVersion = PdVersion.fromText(versionText)
+                    return@forEach
+                }
+            }
+        }
+
+        val dialog = GeneratePMCodeDialog(project, pdVersion)
         if (dialog.showAndGet()) {
             model = GeneratePMCodeModel(project)
 
