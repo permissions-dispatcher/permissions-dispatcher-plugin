@@ -1,3 +1,9 @@
+### [ver 1.3.1](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.3.1)
+
+* Add NonNull annotation #28
+* Show/Hide maxSdkVersion panel based on PD version #30
+* Add final to PermissionRequest parameter #31
+
 ### [ver 1.3.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.3.0)
 
 * [#26] Support maxSdkVersion
