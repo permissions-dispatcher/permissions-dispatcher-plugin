@@ -76,7 +76,7 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
     }
 
     override fun hasMethod(name: String): Boolean {
-        return file.classes[0].findMethodsByName(name, false).size > 0
+        return file.classes[0].findMethodsByName(name, false).isNotEmpty()
     }
 
     override fun addPMMethod(methodTemplate: String, annotation: String) {

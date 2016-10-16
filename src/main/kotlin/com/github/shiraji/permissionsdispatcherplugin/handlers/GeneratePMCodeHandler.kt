@@ -34,27 +34,27 @@ abstract class GeneratePMCodeHandler(val model: GeneratePMCodeModel) : CodeInsig
     }
 
     fun addNeedsPermissionMethod() {
-        if (model.needsPermissionMethodName.length <= 0) return
+        if (model.needsPermissionMethodName.isEmpty()) return
         createNeedsPermissionMethod()
         addImport("permissions.dispatcher.NeedsPermission")
         addImport("android.Manifest")
     }
 
     fun addOnShowRationale() {
-        if (model.onShowRationaleMethodName.length <= 0) return
+        if (model.onShowRationaleMethodName.isEmpty()) return
         addPMMethod(createOnShowRationaleMethodTemplate(), "OnShowRationale")
         addImport("permissions.dispatcher.PermissionRequest")
         addImport("permissions.dispatcher.OnShowRationale")
     }
 
     fun addOnPermissionDenied() {
-        if (model.onPermissionDeniedMethodName.length <= 0) return
+        if (model.onPermissionDeniedMethodName.isEmpty()) return
         addPMMethod(createOnPermissionDeniedMethodTemplate(), "OnPermissionDenied")
         addImport("permissions.dispatcher.OnPermissionDenied")
     }
 
     fun addOnNeverAskAgain() {
-        if (model.onNeverAskAgainMethodName.length <= 0) return
+        if (model.onNeverAskAgainMethodName.isEmpty()) return
         addPMMethod(createOnNeverAskAgainMethodTemplate(), "OnNeverAskAgain")
         addImport("permissions.dispatcher.OnNeverAskAgain")
     }

@@ -40,9 +40,9 @@ class GeneratePMCodeModel(val project: Project) {
     fun isActivityOrFragment(aClass: PsiClass) = isActivity(aClass) || isFragment(aClass) || isSupportFragment(aClass)
 
     fun createPsiClass(qualifiedName: String): PsiClass? {
-        val psiFacade = JavaPsiFacade.getInstance(project);
-        val searchScope = GlobalSearchScope.allScope(project);
-        return psiFacade.findClass(qualifiedName, searchScope);
+        val psiFacade = JavaPsiFacade.getInstance(project)
+        val searchScope = GlobalSearchScope.allScope(project)
+        return psiFacade.findClass(qualifiedName, searchScope)
     }
 
     fun toPermissionParameter(): String {
@@ -57,7 +57,7 @@ class GeneratePMCodeModel(val project: Project) {
         return when (permissions.size) {
             0 -> ""
             1 -> "Manifest.permission.${permissions[0]}"
-            else -> "${permissions.map { "Manifest.permission.$it" }.joinToString { it }}"
+            else -> permissions.map { "Manifest.permission.$it" }.joinToString { it }
         }
     }
 

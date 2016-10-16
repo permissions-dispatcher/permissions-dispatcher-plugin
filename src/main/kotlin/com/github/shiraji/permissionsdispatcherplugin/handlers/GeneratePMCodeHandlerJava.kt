@@ -46,7 +46,7 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
 
     override fun createOnRequestPermissionsResultStatementTemplate(): String {
         val methods = file.classes[0].findMethodsByName("onRequestPermissionsResult", false)
-        assert(methods.size > 0)
+        assert(methods.isNotEmpty())
         return "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${methods[0].parameterList.parameters[0].name}, ${methods[0].parameterList.parameters[2].name});"
     }
 
@@ -72,7 +72,7 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
     }
 
     override fun hasMethod(name: String): Boolean {
-        return file.classes[0].findMethodsByName(name, false).size > 0
+        return file.classes[0].findMethodsByName(name, false).isNotEmpty()
     }
 
     override fun addPMMethod(methodTemplate: String, annotation: String) {
