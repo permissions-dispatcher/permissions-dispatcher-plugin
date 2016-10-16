@@ -38,7 +38,8 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
     }
 
     override fun createOnRequestPermissionsResultMethodTemplate(): String {
-        return """public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        addImport("android.support.annotation.NonNull")
+        return """public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 ${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
             }""".trimMargin()
