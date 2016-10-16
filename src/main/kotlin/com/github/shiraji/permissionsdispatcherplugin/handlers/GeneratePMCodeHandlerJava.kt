@@ -28,7 +28,7 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
     }
 
     override fun createOnShowRationaleMethodTemplate(): String {
-        return """void ${model.onShowRationaleMethodName}(PermissionRequest request) {
+        return """void ${model.onShowRationaleMethodName}(final PermissionRequest request) {
                 }""".trimMargin()
     }
 
