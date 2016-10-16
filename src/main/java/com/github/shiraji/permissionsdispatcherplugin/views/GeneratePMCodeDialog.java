@@ -1,5 +1,6 @@
 package com.github.shiraji.permissionsdispatcherplugin.views;
 
+import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -48,13 +49,14 @@ public class GeneratePMCodeDialog extends DialogBuilder {
     public JTextField onNeverAskAgainTextField;
     public JCheckBox onNeverAskAgainCheckBox;
     public JTextField maxSdkVersionTextField;
+    public JPanel otherOptionPanel;
 
     private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
 
-    public GeneratePMCodeDialog(@Nullable Project project) {
+    public GeneratePMCodeDialog(@Nullable Project project, PdVersion pdVersion) {
         super(project);
         generatePMCodeDialogDelegate = new GeneratePMCodeDialogDelegate(this);
-        generatePMCodeDialogDelegate.initDialog();
+        generatePMCodeDialogDelegate.initDialog(pdVersion);
         setCenterPanel(contentPane);
     }
 
