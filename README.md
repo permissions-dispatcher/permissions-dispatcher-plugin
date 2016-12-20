@@ -24,7 +24,7 @@ You can change `PermissionsDispatcher plugin` from `Preferences... > Other Setti
 ## Rebuild
 
 There are 3 behaviors for rebuilding project after generating PermissionsDispatcher code.
- 
+
 | Type             | Behavior                      |
 |------------------|-------------------------------|
 | Prompt (Default) | Show dialog                   |
@@ -39,6 +39,8 @@ Use the IDE's plugin manager to install the latest version of the plugin.
 
 * [2.1.3](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.1.3)
 * [2.2.0](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.2.0)
+* [2.2.1](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.2.1)
+* [2.3.0](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.0)
 
 ## License
 
