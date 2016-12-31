@@ -41,6 +41,7 @@ Use the IDE's plugin manager to install the latest version of the plugin.
 * [2.2.0](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.2.0)
 * [2.2.1](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.2.1)
 * [2.3.0](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.0)
+* [2.3.1](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.1)
 
 ## License
 
