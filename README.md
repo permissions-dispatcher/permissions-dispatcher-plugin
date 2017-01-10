@@ -4,16 +4,29 @@ IntelliJ plugin for supporting [PermissionsDispatcher](https://github.com/hotche
 
 PermissionsDispatcher is wonderful library for Runtime Permissions. However, it asks developers "attach annotations" and "delegate to generated class" and then after that "rebuild". It's hard to follow all steps correctly. This plugin generates the skelton of methods for "attach annotations" and "delegate to generated class" using GUI.
 
+# How to install?
+
+Use the IDE's plugin manager to install the latest version of the plugin.
+
 # How to use?
 
-* Download [PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher#download)
+## Add dependencies (Optional)
+
+* Open build.gradle and `Generate` -> `Add PermissionsDispatcher dependencies`
+
+(If you already add the dependencies, there is no 'Add PermissionsDispatcher dependencies' menu.)
+
+![dep](website/images/dep.gif)
+
+## Generate Runtime Permissions codes
+
 * Open Activity/Fragment
 * `Generate` -> `Generate Runtime Permissions...`
 * Choose permissions and enter method names for each annotations
 * Click `Generate` button
 * Done!
 
-![gif](website/images/pd.gif)
+![pd](website/images/pd.gif)
 
 (It skips "rebuild" for making gif small, but it is highly recommended to rebuild after generating codes.)
 
@@ -30,10 +43,6 @@ There are 3 behaviors for rebuilding project after generating PermissionsDispatc
 | Prompt (Default) | Show dialog                   |
 | Always           | Always rebuild without dialog |
 | Not Always       | Does not rebuild              |
-
-# How to install?
-
-Use the IDE's plugin manager to install the latest version of the plugin.
 
 # Supported PermissionsDispatcher version
 
