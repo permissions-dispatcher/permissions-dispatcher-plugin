@@ -1,3 +1,8 @@
+### [ver 1.4.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.0)
+
+* Add PermissionsDispatcher to dependencies #22
+* Show warning if no PM dependencies found #38
+
 ### [ver 1.3.1](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.3.1)
 
 * Add NonNull annotation #28

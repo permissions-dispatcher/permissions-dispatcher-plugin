@@ -10,11 +10,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.3.1</p>
+        <p>1.4.0</p>
         <ul>
-            <li>Add NonNull annotation #28</li>
-            <li>Show/Hide maxSdkVersion panel based on PD version #30</li>
-            <li>Add final to PermissionRequest parameter #31</li>
+            <li>Add PermissionsDispatcher to dependencies #22</li>
+            <li>Show warning if no PM dependencies found #38</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

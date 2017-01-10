@@ -11,6 +11,6 @@
     ]]>
     </change-notes>
 ```
-* Commit & push changes
+* `git add .;git commit -m "Version bump";git push origin master`
 * Check [travis ci](https://travis-ci.org/shiraji/permissions-dispatcher-plugin) to successfully release the module
 * Create Release Tag (Upload archive file as well)
