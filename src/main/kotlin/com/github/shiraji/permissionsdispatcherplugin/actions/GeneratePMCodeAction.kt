@@ -3,6 +3,7 @@ package com.github.shiraji.permissionsdispatcherplugin.actions
 import com.github.shiraji.permissionsdispatcherplugin.config.GeneratePMCodeConfig
 import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion
 import com.github.shiraji.permissionsdispatcherplugin.data.RebuildType
+import com.github.shiraji.permissionsdispatcherplugin.extentions.generateVersionNumberFrom
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerJava
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
@@ -10,9 +11,13 @@ import com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeDialog
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.compiler.actions.CompileProjectAction
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationType
+import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.psi.KtFile
@@ -52,51 +57,64 @@ class GeneratePMCodeAction : CodeInsightAction() {
         val project = e?.getData(CommonDataKeys.PROJECT) ?: return
         isKotlin = e?.getData(CommonDataKeys.PSI_FILE) is KtFile
 
-        var pdVersion: PdVersion = PdVersion.UNKNOWN
+        var pdVersion: PdVersion = PdVersion.NOTFOUND
 
-        // I think it should not be filter build.gradle. Find all .gradle files.
-        FilenameIndex.getFilesByName(project, "build.gradle", GlobalSearchScope.projectScope(project)).forEach {
-            if(it is GroovyFile) {
-                val dependenciesBlock = it.findDescendantOfType<GrMethodCallExpression> {
-                    it.invokedExpression.text == "dependencies"
-                }
+        fun updatePdVersion(dependenciesBlock: GrMethodCallExpression) {
+            val pdLine = dependenciesBlock.findDescendantOfType<GrCommandArgumentList> {
+                it.text.contains("com.github.hotchemi:permissionsdispatcher:")
+            }
 
-                val pdLine = dependenciesBlock?.findDescendantOfType<GrCommandArgumentList> {
-                    it.text.contains("com.github.hotchemi:permissionsdispatcher:")
-                }
-
-                pdLine?.text?.let {
-                    text ->
-                    // for now, forget about variables...
-                    val versionText = text.substring(text.lastIndexOf(":") + 1).replace("\'", "").replace("\"", "")
-                    pdVersion = PdVersion.fromText(versionText)
-                    return@forEach
-                }
+            pdLine?.text?.let {
+                text ->
+                // for now, forget about variables...
+                val versionText = text.generateVersionNumberFrom()
+                pdVersion = PdVersion.fromText(versionText)
             }
         }
 
-        val dialog = GeneratePMCodeDialog(project, pdVersion)
-        if (dialog.showAndGet()) {
-            model = GeneratePMCodeModel(project)
+        fun generatePMCode() {
+            val dialog = GeneratePMCodeDialog(project, pdVersion)
+            if (dialog.showAndGet()) {
+                model = GeneratePMCodeModel(project)
 
-            model.apply {
-                permissions = dialog.selectedPermissions
-                if (dialog.needsPermissionCheckBox.isSelected) needsPermissionMethodName = dialog.needsPermissionTextField.text
-                if (dialog.onShowRationaleCheckBox.isSelected) onShowRationaleMethodName = dialog.onShowRationaleTextField.text
-                if (dialog.onPermissionDeniedCheckBox.isSelected) onPermissionDeniedMethodName = dialog.onPermissionDeniedTextField.text
-                if (dialog.onNeverAskAgainCheckBox.isSelected) onNeverAskAgainMethodName = dialog.onNeverAskAgainTextField.text
-                val maxSdkVersionText = dialog.maxSdkVersionTextField.text
-                if (maxSdkVersionText != null && maxSdkVersionText.isNotBlank()) {
-                    maxSdkVersion = maxSdkVersionText.toInt()
+                model.apply {
+                    permissions = dialog.selectedPermissions
+                    if (dialog.needsPermissionCheckBox.isSelected) needsPermissionMethodName = dialog.needsPermissionTextField.text
+                    if (dialog.onShowRationaleCheckBox.isSelected) onShowRationaleMethodName = dialog.onShowRationaleTextField.text
+                    if (dialog.onPermissionDeniedCheckBox.isSelected) onPermissionDeniedMethodName = dialog.onPermissionDeniedTextField.text
+                    if (dialog.onNeverAskAgainCheckBox.isSelected) onNeverAskAgainMethodName = dialog.onNeverAskAgainTextField.text
+                    val maxSdkVersionText = dialog.maxSdkVersionTextField.text
+                    if (maxSdkVersionText != null && maxSdkVersionText.isNotBlank()) {
+                        maxSdkVersion = maxSdkVersionText.toInt()
+                    }
                 }
-            }
 
-            super.actionPerformed(e)
-            afterActionPerformed(e)
+                super.actionPerformed(e)
+                rebuildAction(e)
+            }
+        }
+
+        FilenameIndex.getAllFilesByExt(project, "gradle", GlobalSearchScope.projectScope(project)).forEach {
+            val groovyFile = PsiManager.getInstance(project).findFile(it) as? GroovyFile ?: return@forEach
+            val dependenciesBlock = groovyFile.findDescendantOfType<GrMethodCallExpression> {
+                it.invokedExpression.text == "dependencies"
+            } ?: return@forEach
+            updatePdVersion(dependenciesBlock)
+        }
+
+        if (pdVersion == PdVersion.NOTFOUND) {
+            // no dependencies found for PermissionsDispatcher!
+            Notifications.Bus.notify(Notification(
+                    "PermissionsManager Plugin",
+                    "No PermissionsDispatcher dependency found",
+                    "Please add PermissionsDispatcher dependency",
+                    NotificationType.WARNING))
+        } else {
+            generatePMCode()
         }
     }
 
-    private fun afterActionPerformed(e: AnActionEvent?) {
+    private fun rebuildAction(e: AnActionEvent?) {
         when (RebuildType.fromId(GeneratePMCodeConfig.rebuildTypeId)) {
             RebuildType.ALWAYS -> rebuild(e)
             RebuildType.PROMPT -> {
