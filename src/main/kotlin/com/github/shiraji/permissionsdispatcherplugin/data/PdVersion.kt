@@ -1,6 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.data
 
-enum class PdVersion() {
+enum class PdVersion {
+    NOTFOUND,
     VERSION_2_1_3,
     UNKNOWN;
 
@@ -11,5 +12,7 @@ enum class PdVersion() {
                 else -> UNKNOWN
             }
         }
+
+        const val latestVersion = "2.3.1"
     }
 }
