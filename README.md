@@ -51,6 +51,7 @@ There are 3 behaviors for rebuilding project after generating PermissionsDispatc
 * [2.2.1](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.2.1)
 * [2.3.0](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.0)
 * [2.3.1](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.1)
+* [2.3.2](https://github.com/hotchemi/PermissionsDispatcher/releases/tag/2.3.2)
 
 ## License
 
