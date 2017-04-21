@@ -109,9 +109,9 @@ class GeneratePMCodeAction : CodeInsightAction() {
                     "No PermissionsDispatcher dependency found",
                     "Please add PermissionsDispatcher dependency",
                     NotificationType.WARNING))
-        } else {
-            generatePMCode()
         }
+
+        generatePMCode()
     }
 
     private fun rebuildAction(e: AnActionEvent?) {
