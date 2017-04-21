@@ -1,3 +1,7 @@
+### [ver 1.4.1](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.1)
+
+* Fix the problem with dependencies format #43
+
 ### [ver 1.4.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.0)
 
 * Add PermissionsDispatcher to dependencies #22

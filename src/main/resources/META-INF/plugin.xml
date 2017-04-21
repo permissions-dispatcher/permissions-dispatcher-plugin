@@ -10,10 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.0</p>
+        <p>1.4.1</p>
         <ul>
-            <li>Add PermissionsDispatcher to dependencies #22</li>
-            <li>Show warning if no PM dependencies found #38</li>
+            <li>Fix the problem with dependencies format #43</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>
