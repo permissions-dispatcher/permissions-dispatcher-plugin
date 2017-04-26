@@ -13,6 +13,6 @@ enum class PdVersion {
             }
         }
 
-        const val latestVersion = "2.3.1"
+        const val latestVersion = "2.3.2"
     }
 }
