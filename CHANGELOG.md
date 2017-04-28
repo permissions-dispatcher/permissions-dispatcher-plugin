@@ -1,3 +1,8 @@
+### [ver 1.4.2](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.2)
+
+* Add dependencies is old version #45
+* "Add PermissionsDispatcher dependencies" seems not working if Java file is open #49
+
 ### [ver 1.4.1](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.1)
 
 * Fix the problem with dependencies format #43
