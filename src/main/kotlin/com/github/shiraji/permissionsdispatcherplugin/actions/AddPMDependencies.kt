@@ -16,6 +16,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
+import org.jetbrains.kotlin.psi.psiUtil.collectDescendantsOfType
 import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory
@@ -33,13 +34,18 @@ class AddPMDependencies : CodeInsightAction() {
         e ?: return
         super.update(e)
         val project = e.getData(CommonDataKeys.PROJECT) ?: return
-        FilenameIndex.getAllFilesByExt(project, "gradle", GlobalSearchScope.projectScope(project)).forEach {
-            val groovyFile = PsiManager.getInstance(project).findFile(it) as? GroovyFile ?: return@forEach
-            val dependenciesBlock = groovyFile.findDescendantOfType<GrMethodCallExpression> { it.invokedExpression.text == "dependencies" } ?: return@forEach
-            if (dependenciesBlock.findDescendantOfType<GrCommandArgumentList> { it.text.contains("com.github.hotchemi:permissionsdispatcher:") } != null) {
-                e.presentation.isEnabledAndVisible = false
-                return
-            }
+        val dependenciesBlocks = FilenameIndex.getAllFilesByExt(project, "gradle", GlobalSearchScope.projectScope(project)).map {
+            PsiManager.getInstance(project).findFile(it) as? GroovyFile
+        }.filterNotNull().filter {
+            it.findDescendantOfType<GrCommandArgumentList> { it.text.contains("com.android.application") } != null
+        }.flatMap {
+            it.collectDescendantsOfType<GrMethodCallExpression> { it.invokedExpression.text == "dependencies" }
+        }
+
+        if (dependenciesBlocks.firstOrNull {
+            it.findDescendantOfType<GrCommandArgumentList> { it.text.contains("com.github.hotchemi:permissionsdispatcher:") } != null
+        } != null) {
+            e.presentation.isEnabledAndVisible = false
         }
     }
 
@@ -51,11 +57,13 @@ class AddPMDependencies : CodeInsightAction() {
             var hasAndroidApt = false
             var useKapt = false
             var androidGradleVersion: AndroidGradleVersion? = null
+            var targetFile: GroovyFile? = null
 
             FilenameIndex.getAllFilesByExt(project, "gradle", GlobalSearchScope.projectScope(project)).forEach {
                 val groovyFile = PsiManager.getInstance(project).findFile(it) as? GroovyFile ?: return@forEach
                 if (groovyFile.findDescendantOfType<GrApplicationStatement> { it.text.contains("\'android-apt\'") } != null) hasAndroidApt = true
                 if (groovyFile.findDescendantOfType<GrApplicationStatement> { it.text.contains("\'kotlin-android\'") } != null) useKapt = true
+                if (groovyFile.findDescendantOfType<GrCommandArgumentList> { it.text.contains("com.android.application") } != null) targetFile = groovyFile
 
                 val androidGradleBuildLine = groovyFile.findDescendantOfType<GrCommandArgumentList> {
                     it.text.contains("com.android.tools.build:gradle:")
@@ -68,8 +76,6 @@ class AddPMDependencies : CodeInsightAction() {
                     androidGradleVersion = AndroidGradleVersion(versionText)
                 }
             }
-
-            if (file !is GroovyFile) return
 
             val version = androidGradleVersion
             when {
@@ -86,7 +92,7 @@ class AddPMDependencies : CodeInsightAction() {
                             "No annotation processing settings found. Use 'android gradle plugin version >= 2.2' or 'android-apt'",
                             NotificationType.WARNING))
                 else -> {
-                    val dependenciesBlock = file.findDescendantOfType<GrMethodCallExpression> { it.invokedExpression.text == "dependencies" } ?: return
+                    val dependenciesBlock = targetFile?.findDescendantOfType<GrMethodCallExpression> { it.invokedExpression.text == "dependencies" } ?: return
                     val factory = GroovyPsiElementFactory.getInstance(project)
                     val aptRef = when {
                         useKapt -> "kapt"
@@ -95,9 +101,10 @@ class AddPMDependencies : CodeInsightAction() {
                     }
                     val compileExpression = factory.createExpressionFromText("compile 'com.github.hotchemi:permissionsdispatcher:${PdVersion.latestVersion}'")
                     val annotationProcessorExpression = factory.createExpressionFromText("$aptRef 'com.github.hotchemi:permissionsdispatcher-processor:${PdVersion.latestVersion}'")
-                    dependenciesBlock.closureArguments[0]?.let {
-                        it.addBefore(compileExpression, it.rBrace)
-                        it.addBefore(annotationProcessorExpression, it.rBrace)
+                    dependenciesBlock.closureArguments[0]?.run {
+                        val applicationStatement = addBefore(compileExpression, rBrace) as? GrApplicationStatement
+                        addBefore(annotationProcessorExpression, rBrace)
+                        applicationStatement?.navigate(true)
                     }
                 }
             }
