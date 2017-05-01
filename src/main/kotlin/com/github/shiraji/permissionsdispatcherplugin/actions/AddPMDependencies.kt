@@ -23,6 +23,7 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrApplicationStatement
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrCommandArgumentList
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.path.GrMethodCallExpression
+import javax.swing.JOptionPane
 
 class AddPMDependencies : CodeInsightAction() {
 
@@ -54,6 +55,17 @@ class AddPMDependencies : CodeInsightAction() {
         override fun startInWriteAction() = true
 
         override fun invoke(project: Project, editor: Editor, file: PsiFile) {
+
+            val result = JOptionPane.showOptionDialog(null,
+                    "Do you use native Fragment (android.app.Fragment)?",
+                    "Add PermissionsDispatcher dependencies",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null)
+            if (result == JOptionPane.CANCEL_OPTION) return
+            val isUseNativeFragment = result == JOptionPane.OK_OPTION
             var hasAndroidApt = false
             var useKapt = false
             var androidGradleVersion: AndroidGradleVersion? = null
@@ -99,7 +111,10 @@ class AddPMDependencies : CodeInsightAction() {
                         hasAndroidApt -> "apt"
                         else -> "annotationProcessor"
                     }
-                    val compileExpression = factory.createExpressionFromText("compile 'com.github.hotchemi:permissionsdispatcher:${PdVersion.latestVersion}'")
+
+                    var compileDepTemplate = "compile 'com.github.hotchemi:permissionsdispatcher:${PdVersion.latestVersion}'"
+                    if (!isUseNativeFragment) compileDepTemplate += " { exclude module: 'support-v13' }"
+                    val compileExpression = factory.createExpressionFromText(compileDepTemplate)
                     val annotationProcessorExpression = factory.createExpressionFromText("$aptRef 'com.github.hotchemi:permissionsdispatcher-processor:${PdVersion.latestVersion}'")
                     dependenciesBlock.closureArguments[0]?.run {
                         val applicationStatement = addBefore(compileExpression, rBrace) as? GrApplicationStatement
@@ -111,4 +126,3 @@ class AddPMDependencies : CodeInsightAction() {
         }
     }
 }
-
