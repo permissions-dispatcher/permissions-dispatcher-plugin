@@ -10,10 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.2</p>
+        <p>1.4.3</p>
         <ul>
-            <li>Add dependencies is old version #45</li>
-            <li>"Add PermissionsDispatcher dependencies" seems not working if Java file is open #49</li>
+            <li>Update for PD v2.4.0 #55</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

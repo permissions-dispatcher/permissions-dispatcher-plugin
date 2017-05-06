@@ -1,3 +1,7 @@
+### [ver 1.4.3](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.3)
+
+* Update for v2.4.0 #55
+
 ### [ver 1.4.2](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.2)
 
 * Add dependencies is old version #45
