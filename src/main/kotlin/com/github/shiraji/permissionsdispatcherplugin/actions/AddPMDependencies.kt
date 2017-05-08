@@ -112,7 +112,7 @@ class AddPMDependencies : CodeInsightAction() {
                         else -> "annotationProcessor"
                     }
 
-                    var compileDepTemplate = "compile 'com.github.hotchemi:permissionsdispatcher:${PdVersion.latestVersion}'"
+                    var compileDepTemplate = "compile ('com.github.hotchemi:permissionsdispatcher:${PdVersion.latestVersion}')"
                     if (!isUseNativeFragment) compileDepTemplate += " { exclude module: 'support-v13' }"
                     val compileExpression = factory.createExpressionFromText(compileDepTemplate)
                     val annotationProcessorExpression = factory.createExpressionFromText("$aptRef 'com.github.hotchemi:permissionsdispatcher-processor:${PdVersion.latestVersion}'")
