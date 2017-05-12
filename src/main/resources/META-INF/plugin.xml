@@ -20,7 +20,7 @@
 
     <idea-version since-build="143"/>
 
-    <depends>org.jetbrains.kotlin</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
     <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">

@@ -44,10 +44,15 @@ class GeneratePMCodeAction : CodeInsightAction() {
 
         val project = e.getData(CommonDataKeys.PROJECT)
         val file = e.getData(CommonDataKeys.PSI_FILE)
-        val clazz = when (file) {
-            is PsiJavaFile -> file.classes[0]
-            is KtFile -> file.classes[0]
-            else -> null
+
+        val clazz = if (file is PsiJavaFile) {
+            file.classes[0]
+        } else {
+            try {
+                if (file is KtFile) file.classes[0] else null
+            } catch (e: NoClassDefFoundError) {
+                null
+            }
         }
 
         e.presentation.isEnabledAndVisible = project != null && clazz != null && GeneratePMCodeModel(project).isActivityOrFragment(clazz)
@@ -55,7 +60,12 @@ class GeneratePMCodeAction : CodeInsightAction() {
 
     override fun actionPerformed(e: AnActionEvent?) {
         val project = e?.getData(CommonDataKeys.PROJECT) ?: return
-        isKotlin = e?.getData(CommonDataKeys.PSI_FILE) is KtFile
+
+        try {
+            isKotlin = e?.getData(CommonDataKeys.PSI_FILE) is KtFile
+        } catch (e: NoClassDefFoundError) {
+            isKotlin = false
+        }
 
         var pdVersion: PdVersion = PdVersion.NOTFOUND
 
