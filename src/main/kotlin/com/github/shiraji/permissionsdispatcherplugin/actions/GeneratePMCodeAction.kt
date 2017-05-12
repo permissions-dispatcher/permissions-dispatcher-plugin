@@ -106,7 +106,7 @@ class GeneratePMCodeAction : CodeInsightAction() {
             // no dependencies found for PermissionsDispatcher!
             Notifications.Bus.notify(Notification(
                     "PermissionsManager Plugin",
-                    "No PermissionsDispatcher dependency found",
+                    "No PermissionsDispatcher dependency",
                     "Please add PermissionsDispatcher dependency",
                     NotificationType.WARNING))
         }
