@@ -1,3 +1,9 @@
+### [ver 1.4.4](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.4)
+
+* Fix exclude syntax #58
+* Make kotlin optional #60
+* Make shorter popup title #62
+
 ### [ver 1.4.3](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.3)
 
 * Update for v2.4.0 #55

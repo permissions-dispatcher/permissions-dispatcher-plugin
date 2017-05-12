@@ -10,9 +10,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.3</p>
+        <p>1.4.4</p>
         <ul>
-            <li>Update for PD v2.4.0 #55</li>
+            <li>Fix exclude syntax #58</li>
+            <li>Make kotlin optional #60</li>
+            <li>Make shorter popup title #62</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>
