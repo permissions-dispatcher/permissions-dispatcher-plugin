@@ -30,6 +30,14 @@ Use the IDE's plugin manager to install the latest version of the plugin.
 
 (It skips "rebuild" for making gif small, but it is highly recommended to rebuild after generating codes.)
 
+## Add a generation method call
+
+* `Generate` -> `Add a generation method call`
+* (If there is multiple choices, dialog asks which method you want to delegate)
+* Done!
+
+![add_delegation](website/images/add_delegation.gif)
+
 # Settings
 
 You can change `PermissionsDispatcher plugin` from `Preferences... > Other Settings > PermissionsDispatcher plugin`
