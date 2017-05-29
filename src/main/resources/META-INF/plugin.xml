@@ -10,11 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.4</p>
+        <p>1.4.5</p>
         <ul>
-            <li>Fix exclude syntax #58</li>
-            <li>Make kotlin optional #60</li>
-            <li>Make shorter popup title #62</li>
+            <li>Action for adding `XXXDispacher.functionWith (this)` #53</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

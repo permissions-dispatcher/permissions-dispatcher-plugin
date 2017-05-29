@@ -1,3 +1,7 @@
+### [ver 1.4.5](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.5)
+
+* Action for adding `XXXDispacher.functionWith (this)` #53
+
 ### [ver 1.4.4](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.4)
 
 * Fix exclude syntax #58
