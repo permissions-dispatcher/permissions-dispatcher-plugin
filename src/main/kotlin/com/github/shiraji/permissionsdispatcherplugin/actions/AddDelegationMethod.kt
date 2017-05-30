@@ -1,5 +1,6 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
+import com.github.shiraji.permissionsdispatcherplugin.data.ActionEventCommonJavaData
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.openapi.actionSystem.AnActionEvent
