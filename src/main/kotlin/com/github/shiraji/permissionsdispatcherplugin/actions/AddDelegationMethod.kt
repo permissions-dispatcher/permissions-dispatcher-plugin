@@ -47,12 +47,12 @@ class AddDelegationMethod : CodeInsightAction() {
             val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return
             val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
 
-            val methodName = when(needsPermissionMethods.size) {
+            val methodName = when (needsPermissionMethods.size) {
                 0 -> return
                 1 -> needsPermissionMethods[0].name
                 else -> JOptionPane.showInputDialog(null, "Which methods do you want to delegate?",
-                            "PermissionsDispatcher plugin", JOptionPane.QUESTION_MESSAGE, null,
-                            needsPermissionMethods.map { it.name }.toTypedArray(), needsPermissionMethods.first().name) ?: return
+                        "PermissionsDispatcher plugin", JOptionPane.QUESTION_MESSAGE, null,
+                        needsPermissionMethods.map { it.name }.toTypedArray(), needsPermissionMethods.first().name) ?: return
             }
 
             runWriteAction {
