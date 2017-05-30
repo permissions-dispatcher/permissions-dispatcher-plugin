@@ -25,7 +25,8 @@ class AddDelegationMethod : CodeInsightAction() {
         val offset = editor.caretModel.offset
         val element = file.findElementAt(offset)
         val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
-        if (clazz?.modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") == null) {
+        if (clazz?.modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") == null
+                || PsiTreeUtil.getParentOfType(element, PsiMethod::class.java) == null) {
             e.presentation.isEnabledAndVisible = false
             return
         }
