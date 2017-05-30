@@ -25,11 +25,12 @@ class AddDelegationMethod : CodeInsightAction() {
         val offset = editor.caretModel.offset
         val element = file.findElementAt(offset)
         val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
-        if (clazz?.modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") == null) {
+        if (clazz?.modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") == null
+                || PsiTreeUtil.getParentOfType(element, PsiMethod::class.java) == null) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val needsPermissionMethods = clazz!!.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
+        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
         e.presentation.isEnabledAndVisible = needsPermissionMethods.isNotEmpty()
     }
 
@@ -46,12 +47,12 @@ class AddDelegationMethod : CodeInsightAction() {
             val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return
             val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
 
-            val methodName = when(needsPermissionMethods.size) {
+            val methodName = when (needsPermissionMethods.size) {
                 0 -> return
                 1 -> needsPermissionMethods[0].name
                 else -> JOptionPane.showInputDialog(null, "Which methods do you want to delegate?",
-                            "PermissionsDispatcher plugin", JOptionPane.QUESTION_MESSAGE, null,
-                            needsPermissionMethods.map { it.name }.toTypedArray(), needsPermissionMethods.first().name) ?: return
+                        "PermissionsDispatcher plugin", JOptionPane.QUESTION_MESSAGE, null,
+                        needsPermissionMethods.map { it.name }.toTypedArray(), needsPermissionMethods.first().name) ?: return
             }
 
             runWriteAction {
