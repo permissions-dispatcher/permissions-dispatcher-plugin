@@ -12,6 +12,10 @@ import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.JOptionPane
 
 class AddDelegationMethod : CodeInsightAction() {
+    companion object {
+        const val NEEDS_PERMISSION = "permissions.dispatcher.NeedsPermission"
+        const val RUNTIME_PERMISSIONS = "permissions.dispatcher.RuntimePermissions"
+    }
 
     override fun update(e: AnActionEvent?) {
         e ?: return
@@ -25,12 +29,14 @@ class AddDelegationMethod : CodeInsightAction() {
         val offset = editor.caretModel.offset
         val element = file.findElementAt(offset)
         val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
-        if (clazz?.modifierList?.findAnnotation("permissions.dispatcher.RuntimePermissions") == null
-                || PsiTreeUtil.getParentOfType(element, PsiMethod::class.java) == null) {
+        val method = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
+        if (clazz?.modifierList?.findAnnotation(RUNTIME_PERMISSIONS) == null
+                || method == null
+                || method.modifierList.findAnnotation(NEEDS_PERMISSION) != null) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
+        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
         e.presentation.isEnabledAndVisible = needsPermissionMethods.isNotEmpty()
     }
 
@@ -45,7 +51,7 @@ class AddDelegationMethod : CodeInsightAction() {
             val offset = editor.caretModel.offset
             val element = file.findElementAt(offset)
             val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return
-            val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
+            val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
 
             val methodName = when (needsPermissionMethods.size) {
                 0 -> return
