@@ -1,3 +1,8 @@
+### [ver 1.4.6](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.6)
+
+* "Add a delegation method call" inside NeedsPermission method #67
+* "Add a delegation method call" outside of method #66
+
 ### [ver 1.4.5](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.5)
 
 * Action for adding `XXXDispacher.functionWith (this)` #53

@@ -10,9 +10,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.5</p>
+        <p>1.4.6</p>
         <ul>
-            <li>Action for adding `XXXDispacher.functionWith (this)` #53</li>
+            <li>"Add a delegation method call" inside NeedsPermission method #67</li>
+            <li>"Add a delegation method call" outside of method #66</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>
