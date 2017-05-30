@@ -29,7 +29,7 @@ class AddDelegationMethod : CodeInsightAction() {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val needsPermissionMethods = clazz!!.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
+        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation("permissions.dispatcher.NeedsPermission") != null }
         e.presentation.isEnabledAndVisible = needsPermissionMethods.isNotEmpty()
     }
 
