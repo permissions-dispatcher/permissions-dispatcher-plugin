@@ -12,9 +12,9 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
     override fun update(e: AnActionEvent?) {
         e ?: return
         super.update(e)
-        val (_, _, clazz) = updateForGenerateAction(e) ?: return
-        val needsPermissionMethods = getNeedsPermissionMethods(clazz)
-        val onShowRationaleMethods = getOnShowRationaleMethods(clazz)
+        val (_, _, _, clazz) = updateForGenerateAction(e) ?: return
+        val needsPermissionMethods = clazz.getNeedsPermissionMethods()
+        val onShowRationaleMethods = clazz.getOnShowRationaleMethods()
     }
 
     override fun getHandler(): CodeInsightActionHandler {

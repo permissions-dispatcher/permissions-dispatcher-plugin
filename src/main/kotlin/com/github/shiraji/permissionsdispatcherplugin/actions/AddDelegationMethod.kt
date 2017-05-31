@@ -1,53 +1,38 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
-import com.github.shiraji.permissionsdispatcherplugin.data.ActionEventCommonJavaData
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.*
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.JOptionPane
 
 class AddDelegationMethod : CodeInsightAction() {
     companion object {
         const val NEEDS_PERMISSION = "permissions.dispatcher.NeedsPermission"
-        const val RUNTIME_PERMISSIONS = "permissions.dispatcher.RuntimePermissions"
     }
 
     override fun update(e: AnActionEvent?) {
         e ?: return
         super.update(e)
-        val file = e.getData(CommonDataKeys.PSI_FILE) as? PsiJavaFile
-        val editor = e.getData(CommonDataKeys.EDITOR)
-        if (file == null || editor == null) {
-            e.presentation.isEnabledAndVisible = false
-            return
-        }
-        val offset = editor.caretModel.offset
-        val element = file.findElementAt(offset)
-        val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
+        val (_, _, element, clazz) = updateForGenerateAction(e) ?: return
         val method = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
-        if (clazz?.modifierList?.findAnnotation(RUNTIME_PERMISSIONS) == null
-                || method == null
-                || method.modifierList.findAnnotation(NEEDS_PERMISSION) != null
+        if (method == null
                 || method.name == "onResume" // this is not perfect but who cares someone creates a custom method calls "onResume".
-                ) {
+                || method.isAnnotatedWithNeedsPermission()) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
-        e.presentation.isEnabledAndVisible = needsPermissionMethods.isNotEmpty()
+        e.presentation.isEnabledAndVisible = clazz.getNeedsPermissionMethods().isNotEmpty()
     }
 
-    override fun getHandler(): CodeInsightActionHandler {
-        return AddDelegationMethodHandler()
-    }
-
-    class AddDelegationMethodHandler : CodeInsightActionHandler {
+    override fun getHandler() = object : CodeInsightActionHandler {
         override fun startInWriteAction() = false
 
         override fun invoke(project: Project, editor: Editor, file: PsiFile) {
@@ -71,4 +56,5 @@ class AddDelegationMethod : CodeInsightAction() {
             }
         }
     }
+
 }
