@@ -6,17 +6,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiMethod
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.JOptionPane
 
 class AddDelegationMethod : CodeInsightAction() {
-    companion object {
-        const val NEEDS_PERMISSION = "permissions.dispatcher.NeedsPermission"
-    }
 
     override fun update(e: AnActionEvent?) {
         e ?: return
@@ -36,11 +30,10 @@ class AddDelegationMethod : CodeInsightAction() {
         override fun startInWriteAction() = false
 
         override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-            val offset = editor.caretModel.offset
-            val element = file.findElementAt(offset)
+            if (file !is PsiJavaFile) return
+            val element = getPointingElement(editor, file)
             val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return
-            val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
-
+            val needsPermissionMethods = clazz.getNeedsPermissionMethods()
             val methodName = when (needsPermissionMethods.size) {
                 0 -> return
                 1 -> needsPermissionMethods[0].name

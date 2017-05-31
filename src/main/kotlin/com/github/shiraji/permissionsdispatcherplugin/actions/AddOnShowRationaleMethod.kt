@@ -13,8 +13,15 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
         e ?: return
         super.update(e)
         val (_, _, _, clazz) = updateForGenerateAction(e) ?: return
-        val needsPermissionMethods = clazz.getNeedsPermissionMethods()
-        val onShowRationaleMethods = clazz.getOnShowRationaleMethods()
+        val onShowRationaleAnnotations = clazz.getOnShowRationaleMethods().map { it.getOnShowRationaleAnnotation() }.filterNotNull()
+        e.presentation.isEnabledAndVisible = clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
+            val value = it.parameterList.attributes.firstOrNull { it.name == null || it.name == "value" } ?: return@filter false
+            onShowRationaleAnnotations.firstOrNull {
+                it.parameterList.attributes.firstOrNull {
+                    (it.name == null || it.name == "value") && it.value?.text == value.text
+                } != null
+            } == null
+        }.isNotEmpty()
     }
 
     override fun getHandler(): CodeInsightActionHandler {

@@ -43,6 +43,12 @@
             <add-to-group group-id="JavaGenerateGroup1" anchor="last"/>
         </action>
 
+        <action id="com.github.shiraji.permissionsdispatcherplugin.actions.AddOnShowRationaleMethod"
+                class="com.github.shiraji.permissionsdispatcherplugin.actions.AddOnShowRationaleMethod"
+                text="AAAAAAAAAAAAAAAAAAAAAAAAA">
+            <add-to-group group-id="JavaGenerateGroup1" anchor="last"/>
+        </action>
+
         <action id="com.github.shiraji.permissionsdispatcherplugin.actions.AddPMDependencies"
                 class="com.github.shiraji.permissionsdispatcherplugin.actions.AddPMDependencies"
                 text="Add PermissionsDispatcher dependencies">
