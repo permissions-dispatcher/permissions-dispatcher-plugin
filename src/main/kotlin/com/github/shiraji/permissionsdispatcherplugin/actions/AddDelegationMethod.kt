@@ -32,7 +32,9 @@ class AddDelegationMethod : CodeInsightAction() {
         val method = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
         if (clazz?.modifierList?.findAnnotation(RUNTIME_PERMISSIONS) == null
                 || method == null
-                || method.modifierList.findAnnotation(NEEDS_PERMISSION) != null) {
+                || method.modifierList.findAnnotation(NEEDS_PERMISSION) != null
+                || method.name == "onResume" // this is not perfect but who cares someone creates a custom method calls "onResume".
+                ) {
             e.presentation.isEnabledAndVisible = false
             return
         }
