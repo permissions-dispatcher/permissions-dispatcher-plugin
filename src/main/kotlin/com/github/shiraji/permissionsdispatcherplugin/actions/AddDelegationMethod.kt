@@ -15,15 +15,19 @@ class AddDelegationMethod : CodeInsightAction() {
     override fun update(e: AnActionEvent?) {
         e ?: return
         super.update(e)
-        val (_, _, element, clazz) = updateForGenerateAction(e) ?: return
-        val method = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
+        val data = createActionEventCommonData(e)
+        if (data == null) {
+            e.presentation.isEnabledAndVisible = false
+            return
+        }
+        val method = PsiTreeUtil.getParentOfType(data.element, PsiMethod::class.java)
         if (method == null
                 || method.name == "onResume" // this is not perfect but who cares someone creates a custom method calls "onResume".
                 || method.isAnnotatedWithNeedsPermission()) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        e.presentation.isEnabledAndVisible = clazz.getNeedsPermissionMethods().isNotEmpty()
+        e.presentation.isEnabledAndVisible = data.clazz.getNeedsPermissionMethods().isNotEmpty()
     }
 
     override fun getHandler() = object : CodeInsightActionHandler {

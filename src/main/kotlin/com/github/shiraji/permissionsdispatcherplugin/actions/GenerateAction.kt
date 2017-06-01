@@ -12,19 +12,16 @@ import com.intellij.psi.util.PsiTreeUtil
 private const val NEEDS_PERMISSION = "permissions.dispatcher.NeedsPermission"
 private const val ON_SHOW_RATIONALE = "permissions.dispatcher.OnShowRationale"
 
-fun updateForGenerateAction(e: AnActionEvent): ActionEventCommonJavaData? {
-    val file = e.getData(CommonDataKeys.PSI_FILE) as? PsiJavaFile
-    val editor = e.getData(CommonDataKeys.EDITOR)
-    if (file == null || editor == null) {
-        e.presentation.isEnabledAndVisible = false
-        return null
-    }
-    val element = getPointingElement(editor, file)
-    val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
-    if (element == null || clazz == null || !clazz.isAnnotatedRuntimePermissions()) {
-        e.presentation.isEnabledAndVisible = false
-        return null
-    }
+fun createActionEventCommonData(e: AnActionEvent): ActionEventCommonJavaData? {
+    val file = e.getData(CommonDataKeys.PSI_FILE) as? PsiJavaFile ?: return null
+    val editor = e.getData(CommonDataKeys.EDITOR) ?: return null
+    return createActionEventCommonData(file, editor)
+}
+
+fun createActionEventCommonData(file: PsiJavaFile, editor: Editor): ActionEventCommonJavaData? {
+    val element = getPointingElement(editor, file) ?: return null
+    val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return null
+    if (!clazz.isAnnotatedRuntimePermissions()) return null
     return ActionEventCommonJavaData(file, editor, element, clazz)
 }
 
