@@ -2,15 +2,17 @@ package com.github.shiraji.permissionsdispatcherplugin.actions
 
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
+import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
-import com.intellij.refactoring.rename.PsiElementRenameHandler
-import com.intellij.refactoring.rename.RenameHandler
-import com.intellij.refactoring.rename.RenameJavaMethodProcessor
+import com.intellij.refactoring.RefactoringFactory
+import com.intellij.refactoring.actions.RenameElementAction
+import com.intellij.refactoring.rename.*
+import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler
 
 class AddOnShowRationaleMethod : CodeInsightAction() {
@@ -54,12 +56,12 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
 
                 when(needsPermissionWithoutOnShowRationale.size) {
                     0 -> return
-                    1 -> createOnShowRationaleMethod(project, editor, clazz, needsPermissionWithoutOnShowRationale[0])
+                    1 -> createOnShowRationaleMethod(file, project, editor, clazz, needsPermissionWithoutOnShowRationale[0])
                 }
 
             }
 
-            private fun createOnShowRationaleMethod(project: Project, editor: Editor, clazz: PsiClass, psiAnnotation: PsiAnnotation) {
+            private fun createOnShowRationaleMethod(file: PsiFile, project: Project, editor: Editor, clazz: PsiClass, psiAnnotation: PsiAnnotation) {
                 runWriteAction {
                     val factory = JavaPsiFacade.getElementFactory(project)
                     val onShowRationaleMethod = factory.createMethodFromText("""
@@ -67,15 +69,19 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
                     void methodName(final PermissionRequest request) {
                     }
                     """.trimIndent(), clazz)
-                    val addedElement = clazz.addAfter(onShowRationaleMethod, clazz.methods.last())
 
-                    // TODO fix these renaming feature!
-                    PsiElementRenameHandler.invoke(addedElement, project, clazz.containingFile, editor)
+                    val addedElement = clazz.addAfter(onShowRationaleMethod, clazz.methods.last()) as PsiMethod
 
-                    VariableInplaceRenameHandler().invoke(project, editor, clazz.containingFile) {
-                        addedElement
+                    MemberInplaceRenameHandler().invoke(project, arrayOf(addedElement.nameIdentifier)) {
+                        when(it) {
+                            "editor" -> editor
+                            "psi.Element" -> addedElement.nameIdentifier
+                            "psi.Element.array" -> arrayOf(addedElement.nameIdentifier)
+                            "psi.File" -> file
+                            "project" -> project
+                            else -> null
+                        }
                     }
-
                 }
             }
         }
