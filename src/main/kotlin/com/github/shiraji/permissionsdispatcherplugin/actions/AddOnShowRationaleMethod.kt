@@ -14,6 +14,7 @@ import com.intellij.refactoring.actions.RenameElementAction
 import com.intellij.refactoring.rename.*
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler
+import org.jetbrains.kotlin.psi.psiUtil.startOffset
 
 class AddOnShowRationaleMethod : CodeInsightAction() {
 
@@ -62,26 +63,30 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
             }
 
             private fun createOnShowRationaleMethod(file: PsiFile, project: Project, editor: Editor, clazz: PsiClass, psiAnnotation: PsiAnnotation) {
+                // popup for asking method name
                 runWriteAction {
                     val factory = JavaPsiFacade.getElementFactory(project)
                     val onShowRationaleMethod = factory.createMethodFromText("""
                     @OnShowRationale(${psiAnnotation.parameterList.attributes.first { it.name == null || it.name == "value" }.value!!.text})
-                    void methodName(final PermissionRequest request) {
+                    void METHOD_NAME(final PermissionRequest request) {
                     }
                     """.trimIndent(), clazz)
 
                     val addedElement = clazz.addAfter(onShowRationaleMethod, clazz.methods.last()) as PsiMethod
 
-                    MemberInplaceRenameHandler().invoke(project, arrayOf(addedElement.nameIdentifier)) {
-                        when(it) {
-                            "editor" -> editor
-                            "psi.Element" -> addedElement.nameIdentifier
-                            "psi.Element.array" -> arrayOf(addedElement.nameIdentifier)
-                            "psi.File" -> file
-                            "project" -> project
-                            else -> null
-                        }
-                    }
+//                    editor.caretModel.currentCaret.moveToOffset(addedElement.nameIdentifier!!.startOffset)
+//
+//                    MemberInplaceRenameHandler().invoke(project, arrayOf(addedElement.nameIdentifier)) {
+//                        when(it) {
+//                            "editor" -> editor
+//                            "psi.Element" -> addedElement
+//                            "psi.Element.array" -> arrayOf(addedElement)
+//                            "psi.File" -> file
+//                            "project" -> project
+//                            "caret" -> editor.caretModel.currentCaret
+//                            else -> null
+//                        }
+//                    }
                 }
             }
         }
