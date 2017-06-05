@@ -102,8 +102,8 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
         clazz.getBody()!!.addBefore(function, clazz.getBody()!!.rBrace)
     }
 
-    override fun addAnnotationToClass(fillName: String, name: String) {
-        if (file.classes[0].modifierList?.findAnnotation(fillName) != null) return
+    override fun addAnnotationToClass(fullName: String, name: String) {
+        if (file.classes[0].modifierList?.findAnnotation(fullName) != null) return
         val psiFactory = KtPsiFactory(project)
         val annotationEntry = psiFactory.createAnnotationEntry("@$name")
         val entry = file.declarations[0].addAnnotationEntry(annotationEntry)
