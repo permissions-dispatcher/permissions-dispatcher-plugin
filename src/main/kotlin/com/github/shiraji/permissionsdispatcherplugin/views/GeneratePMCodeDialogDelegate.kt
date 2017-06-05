@@ -56,7 +56,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
                     }
 
                     specialPermissionsCheckbox.filterNot {
-                        it.equals(checkBox)
+                        it == checkBox
                     }.forEach {
                         it.isSelected = false
                     }
@@ -64,7 +64,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             }
         }
 
-        methodNameUI.forEach {
+        methodNameUI.entries.forEach {
             val jCheckBox = it.value
             val jTextField = it.key
             jCheckBox.addChangeListener {
@@ -84,7 +84,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             JOptionPane.showMessageDialog(null, "Must select at least one permission.")
             return false
         }
-        val methodNames = methodNameUI.filter { it.value.isSelected && it.key.text.length <= 0 }
+        val methodNames = methodNameUI.entries.filter { it.value.isSelected && it.key.text.isEmpty() }
         if (methodNames.isNotEmpty()) {
             JOptionPane.showMessageDialog(null, "Must provide method name for ${methodNames.map { it.value.text }.joinToString { it }}")
             return false
