@@ -1,20 +1,14 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
+import com.github.shiraji.permissionsdispatcherplugin.extentions.*
+import com.github.shiraji.permissionsdispatcherplugin.views.AddOnShowRationaleDialog
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
-import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
-import com.intellij.refactoring.RefactoringFactory
-import com.intellij.refactoring.actions.RenameElementAction
-import com.intellij.refactoring.rename.*
-import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler
-import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
 
 class AddOnShowRationaleMethod : CodeInsightAction() {
 
@@ -30,11 +24,9 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
         val clazz = data.clazz
         val onShowRationaleAnnotations = clazz.getOnShowRationaleMethods().map { it.getOnShowRationaleAnnotation() }.filterNotNull()
         e.presentation.isEnabledAndVisible = clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
-            val value = it.parameterList.attributes.firstOrNull { it.name == null || it.name == "value" } ?: return@filter false
+            val value = it.getValueAttribute() ?: return@filter false
             onShowRationaleAnnotations.firstOrNull {
-                it.parameterList.attributes.firstOrNull {
-                    (it.name == null || it.name == "value") && it.value?.text == value.text
-                } != null
+                it.getValueAttribute()?.text == value.text
             } == null
         }.isNotEmpty()
     }
@@ -44,35 +36,35 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
             override fun startInWriteAction() = true
             override fun invoke(project: Project, editor: Editor, file: PsiFile) {
                 file as? PsiJavaFile ?: return
-                val (_, editor, _, clazz) = createActionEventCommonData(file, editor) ?: return
+                val (_, _, _, clazz) = createActionEventCommonData(file, editor) ?: return
                 val onShowRationaleAnnotations = clazz.getOnShowRationaleMethods().map { it.getOnShowRationaleAnnotation() }.filterNotNull()
                 val needsPermissionWithoutOnShowRationale = clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
-                    val value = it.parameterList.attributes.firstOrNull { it.name == null || it.name == "value" } ?: return@filter false
+                    val value = it.getValueAttribute() ?: return@filter false
                     onShowRationaleAnnotations.firstOrNull {
-                        it.parameterList.attributes.firstOrNull {
-                            (it.name == null || it.name == "value") && it.value?.text == value.text
-                        } != null
+                        it.getValueAttribute()?.text == value.text
                     } == null
                 }
 
-                when(needsPermissionWithoutOnShowRationale.size) {
-                    0 -> return
-                    1 -> createOnShowRationaleMethod(file, project, editor, clazz, needsPermissionWithoutOnShowRationale[0])
-                }
-
+                if(needsPermissionWithoutOnShowRationale.isEmpty()) return
+                createOnShowRationaleMethod(project, file, clazz, needsPermissionWithoutOnShowRationale)
             }
 
-            private fun createOnShowRationaleMethod(file: PsiFile, project: Project, editor: Editor, clazz: PsiClass, psiAnnotation: PsiAnnotation) {
-                // popup for asking method name
+            private fun createOnShowRationaleMethod(project: Project, file: PsiJavaFile, clazz: PsiClass, psiAnnotations: List<PsiAnnotation>) {
+                val dialog = AddOnShowRationaleDialog(psiAnnotations)
+                if (!dialog.showAndGet()) return
+                val annotation = psiAnnotations[dialog.annotationComboBox.selectedIndex].getValueAttribute()?.value?.text
+                val methodName = dialog.methodNameTextField.text
+
                 runWriteAction {
                     val factory = JavaPsiFacade.getElementFactory(project)
                     val onShowRationaleMethod = factory.createMethodFromText("""
-                    @OnShowRationale(${psiAnnotation.parameterList.attributes.first { it.name == null || it.name == "value" }.value!!.text})
-                    void METHOD_NAME(final PermissionRequest request) {
+                    @OnShowRationale($annotation)
+                    void $methodName(final PermissionRequest request) {
                     }
                     """.trimIndent(), clazz)
 
                     clazz.addAfter(onShowRationaleMethod, clazz.methods.last())
+                    file.importForOnRationale()
                 }
             }
         }
