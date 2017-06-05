@@ -102,17 +102,17 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
         clazz.getBody()!!.addBefore(function, clazz.getBody()!!.rBrace)
     }
 
-    override fun addAnnotationToClass(fillName: String, name: String) {
-        if (file.classes[0].modifierList?.findAnnotation(fillName) != null) return
+    override fun addAnnotationToClass(fullName: String, name: String) {
+        if (file.classes[0].modifierList?.findAnnotation(fullName) != null) return
         val psiFactory = KtPsiFactory(project)
         val annotationEntry = psiFactory.createAnnotationEntry("@$name")
         val entry = file.declarations[0].addAnnotationEntry(annotationEntry)
         entry.add(psiFactory.createNewLine())
     }
 
-    override fun addImport(importPath: String) {
+    override fun addImport(import: String) {
         val psiFactory = KtPsiFactory(project)
-        val importDirective = psiFactory.createImportDirective(ImportPath(importPath))
+        val importDirective = psiFactory.createImportDirective(ImportPath(import))
         if (file.importDirectives.none { it.importPath == importDirective.importPath }) {
             file.importList?.add(importDirective)
         }

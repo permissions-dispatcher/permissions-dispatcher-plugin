@@ -1,9 +1,10 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
+import com.github.shiraji.permissionsdispatcherplugin.extentions.getNeedsPermissionMethods
+import com.github.shiraji.permissionsdispatcherplugin.extentions.isAnnotatedWithNeedsPermission
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -12,49 +13,33 @@ import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.JOptionPane
 
 class AddDelegationMethod : CodeInsightAction() {
-    companion object {
-        const val NEEDS_PERMISSION = "permissions.dispatcher.NeedsPermission"
-        const val RUNTIME_PERMISSIONS = "permissions.dispatcher.RuntimePermissions"
-    }
 
     override fun update(e: AnActionEvent?) {
         e ?: return
         super.update(e)
-        val file = e.getData(CommonDataKeys.PSI_FILE) as? PsiJavaFile
-        val editor = e.getData(CommonDataKeys.EDITOR)
-        if (file == null || editor == null) {
+        val data = createActionEventCommonData(e)
+        if (data == null) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val offset = editor.caretModel.offset
-        val element = file.findElementAt(offset)
-        val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
-        val method = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
-        if (clazz?.modifierList?.findAnnotation(RUNTIME_PERMISSIONS) == null
-                || method == null
-                || method.modifierList.findAnnotation(NEEDS_PERMISSION) != null
+        val method = PsiTreeUtil.getParentOfType(data.element, PsiMethod::class.java)
+        if (method == null
                 || method.name == "onResume" // this is not perfect but who cares someone creates a custom method calls "onResume".
-                ) {
+                || method.isAnnotatedWithNeedsPermission()) {
             e.presentation.isEnabledAndVisible = false
             return
         }
-        val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
-        e.presentation.isEnabledAndVisible = needsPermissionMethods.isNotEmpty()
+        e.presentation.isEnabledAndVisible = data.clazz.getNeedsPermissionMethods().isNotEmpty()
     }
 
-    override fun getHandler(): CodeInsightActionHandler {
-        return AddDelegationMethodHandler()
-    }
-
-    class AddDelegationMethodHandler : CodeInsightActionHandler {
+    override fun getHandler() = object : CodeInsightActionHandler {
         override fun startInWriteAction() = false
 
         override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-            val offset = editor.caretModel.offset
-            val element = file.findElementAt(offset)
+            if (file !is PsiJavaFile) return
+            val element = getPointingElement(editor, file)
             val clazz = PsiTreeUtil.getParentOfType(element, PsiClass::class.java) ?: return
-            val needsPermissionMethods = clazz.methods.filter { it.modifierList.findAnnotation(NEEDS_PERMISSION) != null }
-
+            val needsPermissionMethods = clazz.getNeedsPermissionMethods()
             val methodName = when (needsPermissionMethods.size) {
                 0 -> return
                 1 -> needsPermissionMethods[0].name
@@ -70,4 +55,5 @@ class AddDelegationMethod : CodeInsightAction() {
             }
         }
     }
+
 }

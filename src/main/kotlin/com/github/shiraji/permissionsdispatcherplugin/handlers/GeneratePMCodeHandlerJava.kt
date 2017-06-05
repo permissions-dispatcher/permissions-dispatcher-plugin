@@ -1,5 +1,6 @@
 package com.github.shiraji.permissionsdispatcherplugin.handlers
 
+import com.github.shiraji.permissionsdispatcherplugin.extentions.importClass
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -94,13 +95,13 @@ class GeneratePMCodeHandlerJava(model: GeneratePMCodeModel) : GeneratePMCodeHand
         file.classes[0].add(method)
     }
 
-    override fun addAnnotationToClass(fillName: String, name: String) {
-        if (file.classes[0].modifierList?.findAnnotation(fillName) != null) return
+    override fun addAnnotationToClass(fullName: String, name: String) {
+        if (file.classes[0].modifierList?.findAnnotation(fullName) != null) return
         file.classes[0].modifierList?.addAnnotation(name)
     }
 
     override fun addImport(import: String) {
-        file.importClass(model.createPsiClass(import) ?: return)
+        file.importClass(import)
     }
 
 }
