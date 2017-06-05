@@ -110,9 +110,9 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
         entry.add(psiFactory.createNewLine())
     }
 
-    override fun addImport(importPath: String) {
+    override fun addImport(import: String) {
         val psiFactory = KtPsiFactory(project)
-        val importDirective = psiFactory.createImportDirective(ImportPath(importPath))
+        val importDirective = psiFactory.createImportDirective(ImportPath(import))
         if (file.importDirectives.none { it.importPath == importDirective.importPath }) {
             file.importList?.add(importDirective)
         }
