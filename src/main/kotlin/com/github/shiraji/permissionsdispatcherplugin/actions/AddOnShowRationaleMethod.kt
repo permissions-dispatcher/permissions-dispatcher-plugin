@@ -9,26 +9,26 @@ import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
+import com.intellij.util.containers.isNullOrEmpty
 
 class AddOnShowRationaleMethod : CodeInsightAction() {
 
     override fun update(e: AnActionEvent?) {
         e ?: return
         super.update(e)
-
         val data = createActionEventCommonData(e)
-        if (data == null) {
-            e.presentation.isEnabledAndVisible = false
-            return
-        }
-        val clazz = data.clazz
+        e.presentation.isEnabledAndVisible = !getNeedsPermissionWithoutOnShowRationale(data?.clazz).isNullOrEmpty()
+    }
+
+    private fun getNeedsPermissionWithoutOnShowRationale(clazz: PsiClass?): List<PsiAnnotation>? {
+        clazz ?: return null
         val onShowRationaleAnnotations = clazz.getOnShowRationaleMethods().map { it.getOnShowRationaleAnnotation() }.filterNotNull()
-        e.presentation.isEnabledAndVisible = clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
+        return clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
             val value = it.getValueAttribute() ?: return@filter false
             onShowRationaleAnnotations.firstOrNull {
                 it.getValueAttribute()?.text == value.text
             } == null
-        }.isNotEmpty()
+        }
     }
 
     override fun getHandler(): CodeInsightActionHandler {
@@ -36,17 +36,10 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
             override fun startInWriteAction() = true
             override fun invoke(project: Project, editor: Editor, file: PsiFile) {
                 file as? PsiJavaFile ?: return
-                val (_, _, _, clazz) = createActionEventCommonData(file, editor) ?: return
-                val onShowRationaleAnnotations = clazz.getOnShowRationaleMethods().map { it.getOnShowRationaleAnnotation() }.filterNotNull()
-                val needsPermissionWithoutOnShowRationale = clazz.getNeedsPermissionMethods().map { it.getNeedsPermissionAnnotation() }.filterNotNull().filter {
-                    val value = it.getValueAttribute() ?: return@filter false
-                    onShowRationaleAnnotations.firstOrNull {
-                        it.getValueAttribute()?.text == value.text
-                    } == null
-                }
-
-                if(needsPermissionWithoutOnShowRationale.isEmpty()) return
-                createOnShowRationaleMethod(project, file, clazz, needsPermissionWithoutOnShowRationale)
+                val data = createActionEventCommonData(file, editor) ?: return
+                val needsPermissionWithoutOnShowRationale = getNeedsPermissionWithoutOnShowRationale(data.clazz) ?: return
+                if (needsPermissionWithoutOnShowRationale.isEmpty()) return
+                createOnShowRationaleMethod(project, file, data.clazz, needsPermissionWithoutOnShowRationale)
             }
 
             private fun createOnShowRationaleMethod(project: Project, file: PsiJavaFile, clazz: PsiClass, psiAnnotations: List<PsiAnnotation>) {
