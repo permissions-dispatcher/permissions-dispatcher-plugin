@@ -45,7 +45,7 @@
 
         <action id="com.github.shiraji.permissionsdispatcherplugin.actions.AddOnShowRationaleMethod"
                 class="com.github.shiraji.permissionsdispatcherplugin.actions.AddOnShowRationaleMethod"
-                text="AAAAAAAAAAAAAAAAAAAAAAAAA">
+                text="Generate onShowRationaleMethod...">
             <add-to-group group-id="JavaGenerateGroup1" anchor="last"/>
         </action>
 
