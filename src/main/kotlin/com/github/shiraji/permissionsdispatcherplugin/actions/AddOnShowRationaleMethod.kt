@@ -72,21 +72,7 @@ class AddOnShowRationaleMethod : CodeInsightAction() {
                     }
                     """.trimIndent(), clazz)
 
-                    val addedElement = clazz.addAfter(onShowRationaleMethod, clazz.methods.last()) as PsiMethod
-
-//                    editor.caretModel.currentCaret.moveToOffset(addedElement.nameIdentifier!!.startOffset)
-//
-//                    MemberInplaceRenameHandler().invoke(project, arrayOf(addedElement.nameIdentifier)) {
-//                        when(it) {
-//                            "editor" -> editor
-//                            "psi.Element" -> addedElement
-//                            "psi.Element.array" -> arrayOf(addedElement)
-//                            "psi.File" -> file
-//                            "project" -> project
-//                            "caret" -> editor.caretModel.currentCaret
-//                            else -> null
-//                        }
-//                    }
+                    clazz.addAfter(onShowRationaleMethod, clazz.methods.last())
                 }
             }
         }
