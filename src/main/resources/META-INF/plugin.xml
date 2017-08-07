@@ -10,10 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.6</p>
+        <p>1.4.7</p>
         <ul>
-            <li>"Add a delegation method call" inside NeedsPermission method #67</li>
-            <li>"Add a delegation method call" outside of method #66</li>
+            <li>"Generate Runtime Permissions" not work in Kotlin file #75 - Thanks @sckm</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

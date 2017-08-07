@@ -1,3 +1,7 @@
+### [ver 1.4.7](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.7)
+
+* "Generate Runtime Permissions" not work in Kotlin file #75 - Thanks @sckm
+
 ### [ver 1.4.6](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.6)
 
 * "Add a delegation method call" inside NeedsPermission method #67
