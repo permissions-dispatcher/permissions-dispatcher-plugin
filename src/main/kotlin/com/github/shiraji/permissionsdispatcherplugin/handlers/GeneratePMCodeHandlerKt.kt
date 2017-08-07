@@ -4,6 +4,7 @@ import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.ImportPath
 
@@ -112,7 +113,7 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
 
     override fun addImport(import: String) {
         val psiFactory = KtPsiFactory(project)
-        val importDirective = psiFactory.createImportDirective(ImportPath(import))
+        val importDirective = psiFactory.createImportDirective(ImportPath(FqName(import), false))
         if (file.importDirectives.none { it.importPath == importDirective.importPath }) {
             file.importList?.add(importDirective)
         }
