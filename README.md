@@ -1,6 +1,6 @@
 # PermissionsDispatcher plugin
 
-IntelliJ plugin for supporting [PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher). This is NOT official plugin.
+IntelliJ plugin for supporting [PermissionsDispatcher](https://github.com/hotchemi/PermissionsDispatcher).
 
 PermissionsDispatcher is wonderful library for Runtime Permissions. However, it asks developers "attach annotations" and "delegate to generated class" and then after that "rebuild". It's hard to follow all steps correctly. This plugin generates the skelton of methods for "attach annotations" and "delegate to generated class" using GUI.
 
