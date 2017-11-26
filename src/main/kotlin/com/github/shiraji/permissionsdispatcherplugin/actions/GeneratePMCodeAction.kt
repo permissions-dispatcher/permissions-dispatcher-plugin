@@ -62,7 +62,7 @@ class GeneratePMCodeAction : CodeInsightAction() {
         val project = e?.getData(CommonDataKeys.PROJECT) ?: return
 
         try {
-            isKotlin = e?.getData(CommonDataKeys.PSI_FILE) is KtFile
+            isKotlin = e.getData(CommonDataKeys.PSI_FILE) is KtFile
         } catch (e: NoClassDefFoundError) {
             isKotlin = false
         }
@@ -112,14 +112,15 @@ class GeneratePMCodeAction : CodeInsightAction() {
             updatePdVersion(dependenciesBlock)
         }
 
-        if (pdVersion == PdVersion.NOTFOUND) {
-            // no dependencies found for PermissionsDispatcher!
-            Notifications.Bus.notify(Notification(
-                    "PermissionsManager Plugin",
-                    "No PermissionsDispatcher dependency",
-                    "Please add PermissionsDispatcher dependency",
-                    NotificationType.WARNING))
-        }
+//        comment out until I found the best way to find a dependency version.
+//        if (pdVersion == PdVersion.NOTFOUND) {
+//            // no dependencies found for PermissionsDispatcher!
+//            Notifications.Bus.notify(Notification(
+//                    "PermissionsManager Plugin",
+//                    "No PermissionsDispatcher dependency",
+//                    "Please add PermissionsDispatcher dependency",
+//                    NotificationType.WARNING))
+//        }
 
         generatePMCode()
     }
