@@ -1,3 +1,8 @@
+### [ver 2.0.0](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/2.0.0)
+
+* .kt file support #80
+* v3.x support #79
+
 ### [ver 1.4.7](https://github.com/shiraji/permissions-dispatcher-plugin/releases/tag/1.4.7)
 
 * "Generate Runtime Permissions" not work in Kotlin file #75 - Thanks @sckm

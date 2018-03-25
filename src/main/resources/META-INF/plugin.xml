@@ -4,15 +4,16 @@
     <vendor email="isogai.shiraji@gmail.com" url="https://github.com/shiraji">Shiraji</vendor>
 
     <description><![CDATA[
-    IntelliJ plugin for supporting PermissionsDispatcher. This is NOT official plugin.
+    IntelliJ plugin for supporting PermissionsDispatcher. This is official plugin.
 
     PermissionsDispatcher is wonderful library for Runtime Permissions. However, it asks developers "attach annotations" and "delegate to generated class" and then after that "rebuild". It's hard to follow all steps correctly. This plugin generates the skelton of methods for "attach annotations" and "delegate to generated class" using GUI.
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>1.4.7</p>
+        <p>2.0.0</p>
         <ul>
-            <li>"Generate Runtime Permissions" not work in Kotlin file #75 - Thanks @sckm</li>
+            <li>.kt file support #80</li>
+            <li>v3.x support #79</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/shiraji/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>
