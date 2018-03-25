@@ -6,13 +6,6 @@ enum class PdVersion {
     UNKNOWN;
 
     companion object {
-        fun fromText(versionText: String): PdVersion {
-            return when (versionText) {
-                "2.1.3" -> VERSION_2_1_3
-                else -> UNKNOWN
-            }
-        }
-
-        const val latestVersion = "3.0.1"
+        const val latestVersion = "3.1.0"
     }
 }

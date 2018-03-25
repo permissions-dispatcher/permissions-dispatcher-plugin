@@ -50,7 +50,7 @@ class AddDelegationMethod : CodeInsightAction() {
 
             runWriteAction {
                 val factory = JavaPsiFacade.getElementFactory(project)
-                val newExpression = factory.createStatementFromText("${clazz.name}PermissionsDispatcher.${methodName}WithCheck(this);", element)
+                val newExpression = factory.createStatementFromText("${clazz.name}PermissionsDispatcher.${methodName}WithPermissionCheck(this);", element)
                 element?.parent?.addAfter(newExpression, element)
             }
         }

@@ -1,6 +1,5 @@
 package com.github.shiraji.permissionsdispatcherplugin.views
 
-import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion
 import com.intellij.openapi.ui.DialogWrapper
 import javax.swing.JCheckBox
 import javax.swing.JOptionPane
@@ -24,7 +23,7 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             dialog.onPermissionDeniedTextField to dialog.onPermissionDeniedCheckBox,
             dialog.onNeverAskAgainTextField to dialog.onNeverAskAgainCheckBox)
 
-    fun initDialog(pdVersion: PdVersion) {
+    init {
         dialog.apply {
             setTitle("PermissionsDispatcher Plugin")
             addOkAction().setText("Generate")
@@ -74,9 +73,6 @@ class GeneratePMCodeDialogDelegate(val dialog: GeneratePMCodeDialog) {
             }
         }
 
-        if (pdVersion == PdVersion.VERSION_2_1_3) {
-            dialog.otherOptionPanel.isVisible = false
-        }
     }
 
     private fun isValidInfo(): Boolean {

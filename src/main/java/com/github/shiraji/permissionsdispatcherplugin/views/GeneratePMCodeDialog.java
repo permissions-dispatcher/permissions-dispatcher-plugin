@@ -1,6 +1,5 @@
 package com.github.shiraji.permissionsdispatcherplugin.views;
 
-import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +52,9 @@ public class GeneratePMCodeDialog extends DialogBuilder {
 
     private GeneratePMCodeDialogDelegate generatePMCodeDialogDelegate;
 
-    public GeneratePMCodeDialog(@Nullable Project project, PdVersion pdVersion) {
+    public GeneratePMCodeDialog(@Nullable Project project) {
         super(project);
         generatePMCodeDialogDelegate = new GeneratePMCodeDialogDelegate(this);
-        generatePMCodeDialogDelegate.initDialog(pdVersion);
         setCenterPanel(contentPane);
     }
 
