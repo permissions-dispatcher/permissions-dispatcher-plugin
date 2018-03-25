@@ -1,9 +1,7 @@
 package com.github.shiraji.permissionsdispatcherplugin.actions
 
 import com.github.shiraji.permissionsdispatcherplugin.config.GeneratePMCodeConfig
-import com.github.shiraji.permissionsdispatcherplugin.data.PdVersion
 import com.github.shiraji.permissionsdispatcherplugin.data.RebuildType
-import com.github.shiraji.permissionsdispatcherplugin.extentions.generateVersionNumberFrom
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerJava
 import com.github.shiraji.permissionsdispatcherplugin.handlers.GeneratePMCodeHandlerKt
 import com.github.shiraji.permissionsdispatcherplugin.models.GeneratePMCodeModel
@@ -11,20 +9,10 @@ import com.github.shiraji.permissionsdispatcherplugin.views.GeneratePMCodeDialog
 import com.intellij.codeInsight.CodeInsightActionHandler
 import com.intellij.codeInsight.actions.CodeInsightAction
 import com.intellij.compiler.actions.CompileProjectAction
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationType
-import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.psiUtil.findDescendantOfType
-import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrCommandArgumentList
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.path.GrMethodCallExpression
 import javax.swing.JOptionPane
 
 class GeneratePMCodeAction : CodeInsightAction() {
@@ -67,23 +55,8 @@ class GeneratePMCodeAction : CodeInsightAction() {
             isKotlin = false
         }
 
-        var pdVersion: PdVersion = PdVersion.NOTFOUND
-
-        fun updatePdVersion(dependenciesBlock: GrMethodCallExpression) {
-            val pdLine = dependenciesBlock.findDescendantOfType<GrCommandArgumentList> {
-                it.text.contains("com.github.hotchemi:permissionsdispatcher:")
-            }
-
-            pdLine?.text?.let {
-                text ->
-                // for now, forget about variables...
-                val versionText = text.generateVersionNumberFrom()
-                pdVersion = PdVersion.fromText(versionText)
-            }
-        }
-
         fun generatePMCode() {
-            val dialog = GeneratePMCodeDialog(project, pdVersion)
+            val dialog = GeneratePMCodeDialog(project)
             if (dialog.showAndGet()) {
                 model = GeneratePMCodeModel(project)
 
@@ -103,24 +76,6 @@ class GeneratePMCodeAction : CodeInsightAction() {
                 rebuildAction(e)
             }
         }
-
-        FilenameIndex.getAllFilesByExt(project, "gradle", GlobalSearchScope.projectScope(project)).forEach {
-            val groovyFile = PsiManager.getInstance(project).findFile(it) as? GroovyFile ?: return@forEach
-            val dependenciesBlock = groovyFile.findDescendantOfType<GrMethodCallExpression> {
-                it.invokedExpression.text == "dependencies"
-            } ?: return@forEach
-            updatePdVersion(dependenciesBlock)
-        }
-
-//        comment out until I found the best way to find a dependency version.
-//        if (pdVersion == PdVersion.NOTFOUND) {
-//            // no dependencies found for PermissionsDispatcher!
-//            Notifications.Bus.notify(Notification(
-//                    "PermissionsManager Plugin",
-//                    "No PermissionsDispatcher dependency",
-//                    "Please add PermissionsDispatcher dependency",
-//                    NotificationType.WARNING))
-//        }
 
         generatePMCode()
     }
