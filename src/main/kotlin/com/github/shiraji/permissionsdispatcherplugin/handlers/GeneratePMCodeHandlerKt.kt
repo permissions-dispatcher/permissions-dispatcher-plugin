@@ -41,25 +41,25 @@ class GeneratePMCodeHandlerKt(model: GeneratePMCodeModel) : GeneratePMCodeHandle
     override fun createOnRequestPermissionsResultMethodTemplate(): String {
         return """override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-                ${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
+                onRequestPermissionsResult(requestCode, grantResults)
                }""".trimMargin()
     }
 
     override fun createOnRequestPermissionsResultStatementTemplate(): String {
         val method = getMethod("onRequestPermissionsResult")
-        return "${file.classes[0].name}PermissionsDispatcher.onRequestPermissionsResult(this, ${method!!.valueParameters[0].name}, ${method.valueParameters[2].name})"
+        return "onRequestPermissionsResult(${method!!.valueParameters[0].name}, ${method.valueParameters[2].name})"
     }
 
     override fun createOnActivityResultMethodTemplate(): String {
         return """override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
                 super.onActivityResult(requestCode, resultCode, data)
-                ${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, requestCode)
+                onActivityResult(requestCode)
             }""".trimMargin()
     }
 
     override fun createOnActivityResultStatementTemplate(): String {
         val method = getMethod("onActivityResult")
-        return "${file.classes[0].name}PermissionsDispatcher.onActivityResult(this, ${method!!.valueParameters[0].name})"
+        return "onActivityResult(${method!!.valueParameters[0].name})"
     }
 
     override fun addStatementToMethod(statement: String, methodName: String) {
