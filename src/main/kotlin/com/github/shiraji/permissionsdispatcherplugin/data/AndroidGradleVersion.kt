@@ -14,7 +14,7 @@ class AndroidGradleVersion(versionText: String) {
         }
     }
 
-    fun isHigherThan2_2() = major >= 2 && minor >= 2
+    fun isHigherThan2_2() = major > 2 || major == 2 && minor >= 2
 
     fun isValid() = major >= 0 && minor >= 0
 }
