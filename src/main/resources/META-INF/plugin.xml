@@ -10,10 +10,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>2.0.0</p>
+        <p>2.0.1</p>
         <ul>
-            <li>.kt file support #80</li>
-            <li>v3.x support #79</li>
+            <li>Fix the problem with isHigherThan2_2 #88 - Thanks @edu-lance for reporting</li>
         </ul>
         <p>Older version changes are listed on <a href="https://github.com/permissions-dispatcher/permissions-dispatcher-plugin/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
     ]]>

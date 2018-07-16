@@ -1,3 +1,7 @@
+### [ver 2.0.1](https://github.com/permissions-dispatcher/permissions-dispatcher-plugin/releases/tag/2.0.1)
+
+* Fix the problem with isHigherThan2_2 #88 - Thanks @edu-lance for reporting
+
 ### [ver 2.0.0](https://github.com/permissions-dispatcher/permissions-dispatcher-plugin/releases/tag/2.0.0)
 
 * .kt file support #80
